@@ -4,38 +4,52 @@ import Logo from './Logo';
 import SubmitButton from './SubmitButton';
 import {useState} from 'react';
 import {Link} from 'react-router-dom';
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-import Loader from "react-loader-spinner";
+import ThreeDots from './ThreeDots';
+import axios from 'axios';
+import {useHistory} from 'react-router-dom';
 
 
 export default function LogIn(){
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const interactionDisabled = true;
+  const [isInteractive, setIsInteractive] = useState(true);
 
-  const ThreeDots = () => (
-      <Loader
-        type="ThreeDots"
-        color="#ffffff"
-        height={10}
-        width={100}
-        timeout={0} //3 secs
-      />
-  );
+  const history = useHistory();
+
+  function submit(e){
+    e.preventDefault();
+    setIsInteractive(false);
+    const url = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
+    const body = {email, password}
+    axios
+      .post(url,body)
+      .then(({data})=>{
+        setIsInteractive(true);
+        history.push({
+          pathname:"/hoje"
+        })
+        console.log(data);
+      })
+      .catch((err)=>{
+        setIsInteractive(true);
+        console.log(err);
+        alert('Deu ruim');
+      })
+  }
 
   return(
     <MainWrapper> 
       <Logo logoWidth="160"/>
       <span>TrackIt</span>
-      <form onSubmit={(e)=>e.preventDefault()}>
+      <form onSubmit={submit}>
         <Input
           type="email"
           placeholder="email"
           state={email}
           setState={setEmail}
           required={true}
-          disabled={interactionDisabled?true:false}
+          disabled={isInteractive?false:true}
         />
         <Input 
           type="password"
@@ -43,12 +57,11 @@ export default function LogIn(){
           state={password}
           setState={setPassword}
           required={true}
-          disabled={interactionDisabled?true:false}
+          disabled={isInteractive?false:true}
         />
         <SubmitButton
-          text={interactionDisabled?<ThreeDots />:"Entrar"}
-          onClick={()=>""}
-          disabled={interactionDisabled?true:false}
+          text={isInteractive?"Entrar":<ThreeDots />}
+          disabled={isInteractive?false:true}
         />
       </form>
       <Link to="/cadastro">

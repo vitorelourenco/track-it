@@ -27,6 +27,7 @@ export default function SingUp(){
     .then(({data})=>{
       setIsInteractive(true);
       console.log(data);
+      alert('Deu ruim');
       history.push({
         pathname:"/",
       });
