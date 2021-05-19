@@ -13,7 +13,7 @@ export default function NewHabit(props){
 
   return (
     <NewHabbitWrapper>
-      <form action={()=>false} onSubmit={(e)=>e.preventDefault()}>
+      <form onSubmit={(e)=>e.preventDefault()}>
         <Input 
           type="text"
           placeholder="nome do hábito"

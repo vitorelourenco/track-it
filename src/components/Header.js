@@ -1,11 +1,16 @@
 import styled from 'styled-components';
+import UserContext from '../contexts/UserContext';
+import {useContext, useEffect, useState} from 'react';
 
 export default function Header(){
+
+  const {userState, setUserState} = useContext(UserContext);
+  console.log(userState);
   return (
     <HeaderWrapper>
       <span>TrackIt</span>
       <picture>
-        <img alt="profile" src="https://i.ytimg.com/vi/oxWAdNupoFc/maxresdefault.jpg" />
+        <img alt="profile" src={userState.image} />
       </picture>
     </HeaderWrapper>
   );
@@ -28,7 +33,7 @@ const HeaderWrapper = styled.header`
     font-size: var(--height-of-content);
     font-family: var(--logo-font);
     color: white;
-    cursor: pointer;
+    cursor: default;
   }
 
   picture {
@@ -42,6 +47,6 @@ const HeaderWrapper = styled.header`
     object-fit: cover;
     width: 100%;
     height: 100%;
-    cursor: pointer;
+    cursor: default;
   }
 `;
