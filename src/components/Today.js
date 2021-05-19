@@ -10,7 +10,7 @@ import percentage from '../functions/percentage';
 var dayjs = require('dayjs');
 
 export default function Today(){
-  const {userState, setUserState} = useContext(UserContext);
+  const {userState} = useContext(UserContext);
   const [todaysHabits, setTodaysHabits] = useState([]);
 
   useEffect(()=>{
@@ -68,13 +68,13 @@ export default function Today(){
         {todaysHabits.map(({id,name,done,currentSequence,highestSequence})=>(
           <DailyHabitCard
             key={id}
+            todaysHabits={todaysHabits}
             habitId={id}
             name={name}
             done={done}
             currentSequence={currentSequence}
             highestSequence={highestSequence}
-            state={done}
-            setState={()=>null}
+
           />
         ))}
       </MainWrapper>

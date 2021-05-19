@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import percentage from '../functions/percentage';
 
 export default function Menu(){
-  const {userState, setUserState} = useContext(UserContext);
+  const {userState} = useContext(UserContext);
   const [todaysHabits, setTodaysHabits] = useState([]);
 
   const history = useHistory();

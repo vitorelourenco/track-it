@@ -2,15 +2,19 @@ import CheckBox from "./CheckBox";
 import styled from "styled-components";
 import { TrashOutline } from "react-ionicons";
 import UserContext from "../contexts/UserContext";
-import { useContext } from "react";
+import { useContext, useState , useEffect} from "react";
 import axios from "axios";
+import LoadingCover from './LoadingCover';
 
 export default function Habit(props) {
-  const { weekDays, checkBoxRowState, habitName, id } = props;
+  const { weekDays, checkBoxRowState, habitName, id, habits } = props;
 
   const { userState, setUserState } = useContext(UserContext);
 
+  const [isInteractive, setIsInteractive] = useState(true);
+
   function deleteTask() {
+    setIsInteractive(false);
     const url = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`;
     const config = {
       headers: {
@@ -19,15 +23,22 @@ export default function Habit(props) {
     };
     axios
       .delete(url, config)
-      .then(() => setUserState({...userState}))
+      .then(() => {
+        setUserState({...userState})
+      })
       .catch(() => {
         console.log('habit.js')
         alert("Deu ruim");
       });
   }
 
+  useEffect(()=>{
+    setIsInteractive(true);
+  },[habits])
+
   return (
     <HabbitWrapper>
+      <LoadingCover isInteractive={isInteractive} rgba="rgba(255,120,0,0.5)"/>
       <TrashWrapper onClick={deleteTask}>
         <TrashOutline />
       </TrashWrapper>

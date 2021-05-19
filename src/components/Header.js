@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import UserContext from '../contexts/UserContext';
-import {useContext, useEffect, useState} from 'react';
+import {useContext} from 'react';
 
 export default function Header(){
 
-  const {userState, setUserState} = useContext(UserContext);
+  const {userState} = useContext(UserContext);
   return (
     <HeaderWrapper>
       <span>TrackIt</span>

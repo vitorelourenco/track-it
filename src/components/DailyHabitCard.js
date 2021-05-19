@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import {CheckmarkOutline} from 'react-ionicons';
 import UserContext from '../contexts/UserContext';
-import {useContext, useState} from 'react';
+import {useContext, useState, useEffect} from 'react';
 import axios from 'axios';
-import ThreeDots from './ThreeDots';
+import LoadingCover from './LoadingCover';
 
 export default function DailyHabitCard(props){
-  const {habitId, name, currentSequence, highestSequence,done} = props;
+  const {habitId, name, currentSequence, highestSequence,done, todaysHabits} = props;
   
   const {userState, setUserState} = useContext(UserContext);
 
@@ -26,25 +26,23 @@ export default function DailyHabitCard(props){
     .post(url, body, config)
     .then(()=>{
       setUserState({...userState});
-      setTimeout(()=>setIsInteractive(true),400);
     })
     .catch(()=>{
-      setIsInteractive(true);
       console.log('Deu ruim')
     });
   }
-  
-  
+
+  useEffect(()=>{
+    setIsInteractive(true);
+  },[todaysHabits])
+
   return (
     <CardWrapper 
     currentSequence={currentSequence} 
     highestSequence={highestSequence} 
-    isInteractive={isInteractive} 
     done={done}
     >
-      <aside onClick={(e)=>e.stopPropagation()}>
-        <ThreeDots />
-      </aside>
+      <LoadingCover isInteractive={isInteractive} rgba="rgba(120,120,120,0.5)"/>
       <section onClick={isInteractive ? toggleCard : (()=>undefined)}>
         <div className="daily-habit-check-box" ><CheckmarkOutline /></div>
         <h3>{name}</h3>
@@ -95,23 +93,4 @@ const CardWrapper = styled.div`
       color: white;
     }
   }
-
-  aside{
-    display: ${props=>props.isInteractive?"none":"initial"};
-    position: absolute;
-    border-radius: 5px;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255,125,0,0.3);
-
-    & > *{
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-  }
-
 `;

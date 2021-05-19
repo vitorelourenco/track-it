@@ -28,7 +28,7 @@ export default function Habits(){
   const [habitName, setHabitName] = useState("");
   const [makingNewHabit, setMakingNewHabit] = useState(false);
   const [habits, setHabits] = useState([]);
-  const {userState, setUserState} = useContext(UserContext);
+  const {userState} = useContext(UserContext);
 
   useEffect(()=>{
     if(
@@ -85,6 +85,7 @@ export default function Habits(){
 
           return (
             <Habit 
+              habits={habits}
               key={habit.id}
               weekDays={weekDays} 
               checkBoxRowState={checkBoxRowState} 
