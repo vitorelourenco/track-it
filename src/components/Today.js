@@ -49,7 +49,7 @@ export default function Today(){
     }
   };
 
-  const now = dayjs(new Date);
+  const now = dayjs();
   const weekday = getWeekDay(now.day());
   const monthday = now.date();
   const month = now.month()+1;

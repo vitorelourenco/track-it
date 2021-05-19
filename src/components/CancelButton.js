@@ -6,6 +6,7 @@ export default function CancelButton(props){
 
   return (
     <ButtonWrapper 
+      type="reset"
       disabled={disabled}
       className={className}
       onClick={typeof(onClick) === "function" ? onClick : (()=>undefined)}
