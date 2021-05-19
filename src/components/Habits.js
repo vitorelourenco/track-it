@@ -3,15 +3,16 @@ import Menu from './Menu';
 import styled from 'styled-components';
 import { Add } from 'react-ionicons'
 
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
 import NewHabit from './NewHabbit';
 import Habit from './Habit';
 
+import UserContext from '../contexts/UserContext';
+import {useContext} from 'react';
+import axios from 'axios';
 
 export default function Habits(){
-  const habitCount = 0;
-  const makingNew = true;
 
   const weekDays = [
     {char:"D", id:0},
@@ -25,8 +26,33 @@ export default function Habits(){
 
   const [checkBoxRowState, setCheckBoxRowState] = useState(Array(weekDays.length).fill(false));
   const [habitName, setHabitName] = useState("");
+  const [makingNewHabit, setMakingNewHabit] = useState(false);
+  const [habits, setHabits] = useState([]);
+  const {userState, setUserState} = useContext(UserContext);
 
-  
+  useEffect(()=>{
+    if(
+      typeof(userState) !== "object"
+      || !userState.hasOwnProperty("token")
+    ) return;
+
+    const url = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
+    const config = {
+      headers:{
+        Authorization: `Bearer ${userState.token}`
+      }
+    }
+    axios
+      .get(url,config)
+      .then(({data})=>{
+        setHabits(data);
+      })
+      .catch(()=>{
+        console.log('habits.ks')
+        alert('Deu ruim');
+      });
+  },[userState]);
+
   return (
     <>
       <Header />
@@ -34,33 +60,42 @@ export default function Habits(){
 
         <header>
           <h2>Meus Hábitos</h2>
-          <PlusButton>
-            <Add 
-              color={"#ffffff"}
-            />
+          <PlusButton onClick={()=>setMakingNewHabit(true)}>
+            <Add color={"#ffffff"} />
           </PlusButton>
         </header>
 
-        {(()=>{
-          if (!makingNew) return "";
-          return (
+        {!makingNewHabit
+          ? ""
+          : (
             <NewHabit 
               weekDays={weekDays} 
               checkBoxRowState={checkBoxRowState} 
               setCheckBoxRowState={setCheckBoxRowState}
               habitName={habitName}
               setHabitName={setHabitName}
+              setMakingNewHabit={setMakingNewHabit}
+            />
+          )
+        }
+
+        {habits.map(habit=>{
+          const checkBoxRowState = Array(weekDays.length).fill(false);
+          habit.days.forEach((day)=>{checkBoxRowState[day]=true});
+
+          return (
+            <Habit 
+              key={habit.id}
+              weekDays={weekDays} 
+              checkBoxRowState={checkBoxRowState} 
+              habitName={habit.name}
+              id={habit.id}
             />
           );
-        })()}
+        })}
 
-        <Habit 
-          weekDays={weekDays} 
-          checkBoxRowState={[false,true,false,true,false,false,false]} 
-          habitName={"banana"}
-        />
 
-        {habitCount === 0? <NoHabitsParagraph /> : ""}
+        {habits.length === 0? <NoHabitsParagraph /> : ""}
       </MainWrapper>
       <Menu /> 
     </>

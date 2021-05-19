@@ -33,6 +33,7 @@ export default function SingUp(){
       });
     })
     .catch((err)=>{
+      console.log('signup.js')
       setIsInteractive(true);
       console.log(err);
     })

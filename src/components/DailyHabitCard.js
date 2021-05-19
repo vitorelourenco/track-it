@@ -2,13 +2,13 @@ import styled from 'styled-components';
 import {CheckmarkOutline} from 'react-ionicons';
 
 export default function DailyHabitCard(props){
-  const {name, sequence, record, state, setState} = props;
+  const {name, currentSequence, highestSequence, setState} = props;
   return (
     <CardWrapper onClick={setState}>
       <div><CheckmarkOutline /></div>
       <h3>{name}</h3>
-      <p>Sequência atual: <em>{sequence} dias</em></p>
-      <p>Seu recorder: <em>{record} dias</em></p>
+      <p>Sequência atual: <em>{currentSequence} dias</em></p>
+      <p>Seu recorder: <em>{highestSequence} dias</em></p>
 
     </CardWrapper>
   );

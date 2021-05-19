@@ -30,6 +30,7 @@ export default function Menu(){
         setTodaysHabits(data);
       })
       .catch(()=>{
+        console.log('menu.js')
         alert('Deu ruim');
       });
   },[userState]);

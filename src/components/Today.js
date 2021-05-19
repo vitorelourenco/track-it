@@ -8,7 +8,7 @@ import axios from 'axios';
 
 export default function Today(){
   const {userState, setUserState} = useContext(UserContext);
-  const [habits, setHabits] = useState([]);
+  const [todaysHabits, setTodaysHabits] = useState([]);
 
   useEffect(()=>{
     if(
@@ -16,7 +16,7 @@ export default function Today(){
       || !userState.hasOwnProperty("token")
     ) return;
 
-    const url = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
+    const url = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today";
     const config = {
       headers: {
         Authorization: `Bearer ${userState.token}`
@@ -25,9 +25,10 @@ export default function Today(){
     axios
       .get(url, config)
       .then(({data})=>{
-        setHabits(data);
+        setTodaysHabits(data);
       })
       .catch(()=>{
+        console.log('today.js')
         alert('Deu ruim');
       });
   },[userState]);
@@ -36,14 +37,15 @@ export default function Today(){
     <>
       <Header />
       <MainWrapper>
-        <DailyHabitCard
-          name={"banana"}
-          sequence={3}
-          record={3}
-          setState={()=>null}
-        >
-        </DailyHabitCard>
-
+        {todaysHabits.map(({name,done,currentSequence,highestSequence})=>{
+          <DailyHabitCard
+            name={name}
+            currentSequence={currentSequence}
+            highestSequence={highestSequence}
+            state={done}
+            setState={()=>null}
+          />
+        })}
       </MainWrapper>
       <Menu /> 
     </>

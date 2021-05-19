@@ -1,33 +1,51 @@
-import CheckBox from './CheckBox';
-import styled from 'styled-components';
-import {TrashOutline} from 'react-ionicons';
+import CheckBox from "./CheckBox";
+import styled from "styled-components";
+import { TrashOutline } from "react-ionicons";
+import UserContext from "../contexts/UserContext";
+import { useContext } from "react";
+import axios from "axios";
 
-export default function NewHabit(props){
-  const {weekDays} = props;
-  const {checkBoxRowState} = props;
-  const {habitName} = props;
+export default function Habit(props) {
+  const { weekDays, checkBoxRowState, habitName, id } = props;
+
+  const { userState, setUserState } = useContext(UserContext);
+
+  function deleteTask() {
+    const url = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userState.token}`,
+      },
+    };
+    axios
+      .delete(url, config)
+      .then(() => setUserState({...userState}))
+      .catch(() => {
+        console.log('habit.js')
+        alert("Deu ruim");
+      });
+  }
 
   return (
     <HabbitWrapper>
-      <TrashWrapper>
+      <TrashWrapper onClick={deleteTask}>
         <TrashOutline />
       </TrashWrapper>
       <span>{habitName}</span>
       <WeekDays>
-        {weekDays.map(({char, id}, i)=>
-          <CheckBox 
+        {weekDays.map(({ char, id }, i) => (
+          <CheckBox
             key={id}
             index={i}
             state={checkBoxRowState}
             char={char}
             disabled={true}
           />
-        )}
+        ))}
       </WeekDays>
     </HabbitWrapper>
   );
 }
-
 
 const HabbitWrapper = styled.article`
   background-color: white;
@@ -37,11 +55,11 @@ const HabbitWrapper = styled.article`
   margin-top: 20px;
   position: relative;
 
-  [type="checkbox"]{
+  [type="checkbox"] {
     cursor: auto;
   }
 
-  span{
+  span {
     color: #666666;
     font-size: 20px;
     line-height: 25px;
@@ -60,4 +78,3 @@ const WeekDays = styled.div`
   gap: 4px;
   margin-top: 8px;
 `;
-

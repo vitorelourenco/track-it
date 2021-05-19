@@ -37,7 +37,7 @@ export default function LogIn(){
       })
       .catch((err)=>{
         setIsInteractive(true);
-        console.log(err);
+        console.log('login.js');
         alert('Deu ruim');
       })
   }

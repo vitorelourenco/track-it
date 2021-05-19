@@ -5,7 +5,6 @@ import {useContext, useEffect, useState} from 'react';
 export default function Header(){
 
   const {userState, setUserState} = useContext(UserContext);
-  console.log(userState);
   return (
     <HeaderWrapper>
       <span>TrackIt</span>

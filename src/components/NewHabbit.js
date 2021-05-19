@@ -3,24 +3,72 @@ import CancelButton from './CancelButton';
 import CheckBox from './CheckBox';
 import Input from './Input';
 import styled from 'styled-components';
+import {useState} from 'react';
+import axios from 'axios';
+import UserContext from '../contexts/UserContext';
+import {useContext} from 'react';
 
 export default function NewHabit(props){
+  function cancel(e){
+    e.preventDefault();
+    setMakingNewHabit(false);
+  }
+
+  function submit(e){
+    e.preventDefault();
+    const days = 
+      checkBoxRowState
+      .map((elem,i)=>elem!==false?i:false)
+      .filter(elem=>elem!==false);
+    const name = habitName;
+    const url = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
+    const body = {name, days};
+    const config = {
+      headers:{
+        Authorization: `Bearer ${userState.token}`
+      }
+    }
+
+    setIsInteractive(false);
+    axios
+      .post(url,body,config)
+      .then(()=>{
+        setUserState({...userState});
+        setIsInteractive(true);
+        setHabitName("");
+        setCheckBoxRowState([...checkBoxRowState].fill(false));
+        setMakingNewHabit(false);
+      })
+      .catch(()=>{
+        console.log('newhabbit.js')
+        alert('Deu ruim');
+        setIsInteractive(true);
+      })
+  }
+
   const {weekDays} = props;
   const {checkBoxRowState, setCheckBoxRowState} = props;
+  const {setMakingNewHabit} = props;
   const {habitName, setHabitName} = props;
+
+  const [isInteractive, setIsInteractive] = useState(true);
 
   const dayIsRequired = !checkBoxRowState.reduce((acc,bol)=>acc=acc||bol,false);
 
+  const {userState, setUserState} = useContext(UserContext);
+
+
+
   return (
     <NewHabbitWrapper>
-      <form onSubmit={(e)=>e.preventDefault()}>
+      <form onSubmit={submit}>
         <Input 
           type="text"
           placeholder="nome do hábito"
           state={habitName}
           setState={setHabitName}
           required={true}
-          disabled={false}
+          disabled={!isInteractive}
           name="habitName"
         />
         <WeekDays>
@@ -31,15 +79,15 @@ export default function NewHabit(props){
               state={checkBoxRowState}
               setState={setCheckBoxRowState}
               char={char}
-              disabled={false}
+              disabled={!isInteractive}
               required={dayIsRequired}
               name="days"
             />
           )}
         </WeekDays>
         <ButtonBox>
-          <CancelButton text="Cancelar"/>
-          <SubmitButton text="Salvar"/>
+          <CancelButton disabled={!isInteractive} onClick={cancel} text="Cancelar"/>
+          <SubmitButton disabled={!isInteractive} text="Salvar"/>
         </ButtonBox>
       </form>
     </NewHabbitWrapper>
