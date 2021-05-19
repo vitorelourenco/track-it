@@ -3,10 +3,11 @@ import CancelButton from './CancelButton';
 import CheckBox from './CheckBox';
 import Input from './Input';
 import styled from 'styled-components';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import axios from 'axios';
 import UserContext from '../contexts/UserContext';
 import {useContext} from 'react';
+import ThreeDots from './ThreeDots';
 
 export default function NewHabit(props){
   function cancel(e){
@@ -33,11 +34,11 @@ export default function NewHabit(props){
     axios
       .post(url,body,config)
       .then(()=>{
-        setUserState({...userState});
         setIsInteractive(true);
         setHabitName("");
         setCheckBoxRowState([...checkBoxRowState].fill(false));
         setMakingNewHabit(false);
+        setUserState({...userState});
       })
       .catch(()=>{
         console.log('newhabbit.js')
@@ -48,7 +49,7 @@ export default function NewHabit(props){
 
   const {weekDays} = props;
   const {checkBoxRowState, setCheckBoxRowState} = props;
-  const {setMakingNewHabit} = props;
+  const {setMakingNewHabit , habits} = props;
   const {habitName, setHabitName} = props;
 
   const [isInteractive, setIsInteractive] = useState(true);
@@ -57,7 +58,9 @@ export default function NewHabit(props){
 
   const {userState, setUserState} = useContext(UserContext);
 
+  useEffect(()=>{
 
+  },[habits]);
 
   return (
     <NewHabbitWrapper>
@@ -87,7 +90,10 @@ export default function NewHabit(props){
         </WeekDays>
         <ButtonBox>
           <CancelButton disabled={!isInteractive} onClick={cancel} text="Cancelar"/>
-          <SubmitButton disabled={!isInteractive} text="Salvar"/>
+          <SubmitButton 
+            disabled={!isInteractive} 
+            text={!isInteractive?<ThreeDots />:"Salvar"}
+          />
         </ButtonBox>
       </form>
     </NewHabbitWrapper>

@@ -6,7 +6,7 @@ import axios from 'axios';
 import LoadingCover from './LoadingCover';
 
 export default function DailyHabitCard(props){
-  const {habitId, name, currentSequence, highestSequence,done, todaysHabits} = props;
+  const {habitId, name, currentSequence, highestSequence,done} = props;
   
   const {userState, setUserState} = useContext(UserContext);
 
@@ -29,12 +29,13 @@ export default function DailyHabitCard(props){
     })
     .catch(()=>{
       console.log('Deu ruim')
+      setIsInteractive(true);
     });
   }
 
   useEffect(()=>{
     setIsInteractive(true);
-  },[todaysHabits])
+  },[done])
 
   return (
     <CardWrapper 

@@ -68,13 +68,11 @@ export default function Today(){
         {todaysHabits.map(({id,name,done,currentSequence,highestSequence})=>(
           <DailyHabitCard
             key={id}
-            todaysHabits={todaysHabits}
             habitId={id}
             name={name}
             done={done}
             currentSequence={currentSequence}
             highestSequence={highestSequence}
-
           />
         ))}
       </MainWrapper>

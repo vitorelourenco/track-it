@@ -14,6 +14,7 @@ export default function Habit(props) {
   const [isInteractive, setIsInteractive] = useState(true);
 
   function deleteTask() {
+    if (!window.confirm(`Deseja deletar o hábito \n ${habitName}`)) return; 
     setIsInteractive(false);
     const url = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`;
     const config = {
@@ -27,14 +28,11 @@ export default function Habit(props) {
         setUserState({...userState})
       })
       .catch(() => {
+        setIsInteractive(true);
         console.log('habit.js')
         alert("Deu ruim");
       });
   }
-
-  useEffect(()=>{
-    setIsInteractive(true);
-  },[habits])
 
   return (
     <HabbitWrapper>

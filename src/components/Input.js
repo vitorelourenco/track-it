@@ -26,6 +26,10 @@ const InputWrapper = styled.input`
   padding-left: 10px;
   padding-right: 10px;
 
+  &:disabled{
+    background-color: #f2f2f2;
+  }
+
   &::placeholder{
     color: #dbdbdb;
   }

@@ -69,6 +69,7 @@ export default function Habits(){
           ? ""
           : (
             <NewHabit 
+              habits={habits}
               weekDays={weekDays} 
               checkBoxRowState={checkBoxRowState} 
               setCheckBoxRowState={setCheckBoxRowState}
@@ -94,8 +95,6 @@ export default function Habits(){
             />
           );
         })}
-
-
         {habits.length === 0? <NoHabitsParagraph /> : ""}
       </MainWrapper>
       <Menu /> 
