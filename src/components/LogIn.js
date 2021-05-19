@@ -7,7 +7,8 @@ import {Link} from 'react-router-dom';
 import ThreeDots from './ThreeDots';
 import axios from 'axios';
 import {useHistory} from 'react-router-dom';
-
+import {useContext} from 'react';
+import UserContext from '../contexts/UserContext';
 
 export default function LogIn(){
   const [email, setEmail] = useState("");
@@ -16,6 +17,8 @@ export default function LogIn(){
   const [isInteractive, setIsInteractive] = useState(true);
 
   const history = useHistory();
+
+  const {setUserState} = useContext(UserContext);
 
   function submit(e){
     e.preventDefault();
@@ -26,6 +29,7 @@ export default function LogIn(){
       .post(url,body)
       .then(({data})=>{
         setIsInteractive(true);
+        setUserState({...data});
         history.push({
           pathname:"/hoje"
         })
@@ -77,6 +81,10 @@ const MainWrapper = styled.main`
   align-items: center;
   padding: 135px 36px 36px 36px;
   background-color: white;
+
+  form {
+    width: 100%;
+  }
 
   input,
   button {

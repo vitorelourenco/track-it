@@ -1,14 +1,52 @@
 import { CircularProgressbar , buildStyles} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import styled from 'styled-components';
+import UserContext from '../contexts/UserContext';
+import {useContext, useEffect, useState} from 'react';
+import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 export default function Menu(){
-  const percentage = 35;
+  const {userState, setUserState} = useContext(UserContext);
+  const [todaysHabits, setTodaysHabits] = useState([]);
+
+  const history = useHistory();
+
+  useEffect(()=>{
+    if(
+      typeof(userState) !== "object"
+      || !userState.hasOwnProperty("token")
+    ) return;
+
+    const url = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today";
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userState.token}`
+      }
+    }
+    axios
+      .get(url, config)
+      .then(({data})=>{
+        setTodaysHabits(data);
+      })
+      .catch(()=>{
+        alert('Deu ruim');
+      });
+  },[userState]);
+
+  const percentage = (()=>{
+    const len = todaysHabits.length;
+    if(len === 0) return 100;
+    return Math.floor(100 / len * todaysHabits.reduce((acc,elem)=>{
+      return elem.done?acc+1:acc;
+    },0));
+  })();
+  
   return (
     <MenuWrapper>
-      <MenuText className="cursor-pointer text-align-right">Hábitos</MenuText>
-      <MenuText className="cursor-pointer text-align-left">Histórico</MenuText>
-      <ProgressBarContainer>
+      <MenuText onClick={()=>history.push("/habitos")} className="cursor-pointer text-align-right">Hábitos</MenuText>
+      <MenuText onClick={()=>history.push("/historico")} className="cursor-pointer text-align-left">Histórico</MenuText>
+      <ProgressBarContainer onClick={()=>history.push("/hoje")}>
         <CircularProgressbar 
           value={percentage} 
           text={"Hoje"}

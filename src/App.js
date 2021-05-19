@@ -10,10 +10,16 @@ import LogIn from './components/LogIn';
 import SignUp from './components/SignUp';
 import { Route } from 'react-router';
 import {Switch} from 'react-router-dom';
+import {useState} from 'react';
+import UserContext from './contexts/UserContext';
+
 
 function App() {
+
+  const [userState, setUserState] = useState(undefined)
+
   return (
-    <>
+    <UserContext.Provider value={{userState, setUserState}}>
       <GlobalStylesReset />
       <GlobalStylesVEL />
       <GlobalStylesTrackIt />
@@ -34,7 +40,7 @@ function App() {
           <History />
         </Route>
       </Switch>
-    </>
+    </UserContext.Provider>
   );
 }
 
