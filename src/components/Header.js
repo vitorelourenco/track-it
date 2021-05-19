@@ -9,7 +9,7 @@ export default function Header(){
     <HeaderWrapper>
       <span>TrackIt</span>
       <picture>
-        <img alt="profile" src={userState.image} />
+        <img alt="profile" src={(typeof(userState)==="object" && userState.image) || ""} />
       </picture>
     </HeaderWrapper>
   );

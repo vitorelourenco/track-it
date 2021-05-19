@@ -27,12 +27,12 @@ export default function SingUp(){
     .then(({data})=>{
       setIsInteractive(true);
       console.log(data);
-      alert('Deu ruim');
       history.push({
         pathname:"/",
       });
     })
     .catch((err)=>{
+      alert('Deu ruim');
       console.log('signup.js')
       setIsInteractive(true);
       console.log(err);
