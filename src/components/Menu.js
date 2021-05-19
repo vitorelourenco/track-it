@@ -5,6 +5,7 @@ import UserContext from '../contexts/UserContext';
 import {useContext, useEffect, useState} from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import percentage from '../functions/percentage';
 
 export default function Menu(){
   const {userState, setUserState} = useContext(UserContext);
@@ -35,21 +36,13 @@ export default function Menu(){
       });
   },[userState]);
 
-  const percentage = (()=>{
-    const len = todaysHabits.length;
-    if(len === 0) return 100;
-    return Math.floor(100 / len * todaysHabits.reduce((acc,elem)=>{
-      return elem.done?acc+1:acc;
-    },0));
-  })();
-  
   return (
     <MenuWrapper>
       <MenuText onClick={()=>history.push("/habitos")} className="cursor-pointer text-align-right">Hábitos</MenuText>
       <MenuText onClick={()=>history.push("/historico")} className="cursor-pointer text-align-left">Histórico</MenuText>
       <ProgressBarContainer onClick={()=>history.push("/hoje")}>
         <CircularProgressbar 
-          value={percentage} 
+          value={percentage(todaysHabits, "done")} 
           text={"Hoje"}
           background
           backgroundPadding={6}
