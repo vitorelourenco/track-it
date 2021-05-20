@@ -12,11 +12,13 @@ import { Route } from 'react-router';
 import {Switch} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import UserContext from './contexts/UserContext';
+import NavContext from './contexts/NavContext';
 
 
 function App() {
 
-  const [userState, setUserState] = useState(undefined)
+  const [userState, setUserState] = useState(undefined);
+  const [navState, setNavState] = useState(false);
 
   //delete this later
   useEffect(()=>
@@ -34,26 +36,28 @@ function App() {
 
   return (
     <UserContext.Provider value={{userState, setUserState}}>
-      <GlobalStylesReset />
-      <GlobalStylesVEL />
-      <GlobalStylesTrackIt />
-      <Switch>
-        <Route exact path="/">
-          <LogIn />
-        </Route>
-        <Route exact path="/cadastro">
-          <SignUp />
-        </Route>
-        <Route exact path="/habitos">
-          <Habits />
-        </Route>
-        <Route exact path="/hoje">
-          <Today />
-        </Route>
-        <Route exact path="/historico">
-          <History />
-        </Route>
-      </Switch>
+      <NavContext.Provider value={{navState, setNavState}}>
+        <GlobalStylesReset />
+        <GlobalStylesVEL />
+        <GlobalStylesTrackIt />
+        <Switch>
+          <Route exact path="/habitos">
+            <Habits />
+          </Route>
+          <Route exact path="/hoje">
+            <Today />
+          </Route>
+          <Route exact path="/historico">
+            <History />
+          </Route>
+          <Route exact path="/cadastro">
+            <SignUp />
+          </Route>
+          <Route path="/">
+            <LogIn />
+          </Route>
+        </Switch>
+      </NavContext.Provider>
     </UserContext.Provider>
   );
 }
