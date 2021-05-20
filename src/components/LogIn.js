@@ -28,6 +28,7 @@ export default function LogIn(){
     axios
       .post(url,body)
       .then(({data})=>{
+        localStorage.setItem("user",JSON.stringify(data));
         setIsInteractive(true);
         setUserState({...data});
         history.push({

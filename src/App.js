@@ -13,6 +13,7 @@ import {Switch} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import UserContext from './contexts/UserContext';
 import NavContext from './contexts/NavContext';
+import {useHistory} from 'react-router-dom';
 
 
 function App() {
@@ -20,19 +21,15 @@ function App() {
   const [userState, setUserState] = useState(undefined);
   const [navState, setNavState] = useState(false);
 
-  //delete this later
-  useEffect(()=>
-    setUserState(
-      {
-        email: "vitor@ra.com",
-        id: 70,
-        image: "https://img.ibxk.com.br/2019/07/26/26000559344397.jpg",
-        name: "vitor",
-        password: "12345",
-        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NzAsImlhdCI6MTYyMTQzNDA5NH0.FYV96StPfMYmLPtR51GUt0BY0SqjzcdpzDLsJumckXM"
-      }
-    )
-  ,[]);
+  const history = useHistory();
+
+  useEffect(()=>{
+    const localUser = localStorage.getItem("user");
+    if (localUser !== null){
+      setUserState(JSON.parse(localUser));
+      history.push("/hoje");
+    }
+  },[]);
 
   return (
     <UserContext.Provider value={{userState, setUserState}}>
