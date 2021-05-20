@@ -6,7 +6,6 @@ import UserContext from '../contexts/UserContext';
 import {useContext, useEffect, useState} from 'react';
 import axios from 'axios';
 import percentage from '../functions/percentage';
-
 var dayjs = require('dayjs');
 
 export default function Today(){
