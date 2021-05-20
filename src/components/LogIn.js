@@ -8,20 +8,19 @@ import { Link, useHistory } from "react-router-dom";
 import { useState, useContext } from "react";
 import UserContext from "../contexts/UserContext";
 
-export default function LogIn(props) {
+export default function LogIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [isInteractive, setIsInteractive] = useState(true);
 
   const history = useHistory();
 
   const { setUserState } = useContext(UserContext);
-  const {setLoginResolved, setLoginTriggered} = props;
 
   function submit(e) {
     e.preventDefault();
     setIsInteractive(false);
-    setLoginTriggered(true);
     const url =
       "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
     const body = { email, password };
@@ -31,10 +30,11 @@ export default function LogIn(props) {
         localStorage.setItem("user", JSON.stringify(data));
         setIsInteractive(true);
         setUserState({ ...data });
-        setLoginResolved(true);
+        history.push({
+          pathname: "/hoje",
+        });
       })
-      .catch(() => {
-        setLoginTriggered(false);
+      .catch((err) => {
         setIsInteractive(true);
         alert("Requisicao de login recusada");
       });

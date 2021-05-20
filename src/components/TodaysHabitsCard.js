@@ -36,7 +36,7 @@ export default function DailyHabitCard(props) {
   }, [done]);
 
   return (
-    <CardWrapper
+    <CardWrapper onClick={isInteractive ? toggleCard : () => undefined}
       currentSequence={currentSequence}
       highestSequence={highestSequence}
       done={done}
@@ -45,7 +45,7 @@ export default function DailyHabitCard(props) {
         isInteractive={isInteractive}
         rgba="rgba(120,120,120,0.5)"
       />
-      <section onClick={isInteractive ? toggleCard : () => undefined}>
+      <section>
         <div className="daily-habit-check-box">
           <CheckmarkOutline />
         </div>
