@@ -34,10 +34,6 @@ export default function NewHabit(props){
     axios
       .post(url,body,config)
       .then(()=>{
-        setIsInteractive(true);
-        setHabitName("");
-        setCheckBoxRowState([...checkBoxRowState].fill(false));
-        setMakingNewHabit(false);
         setUserState({...userState});
       })
       .catch(()=>{
@@ -49,8 +45,8 @@ export default function NewHabit(props){
 
   const {weekDays} = props;
   const {checkBoxRowState, setCheckBoxRowState} = props;
-  const {setMakingNewHabit , habits} = props;
-  const {habitName, setHabitName} = props;
+  const {setMakingNewHabit , makingNewHabit} = props;
+  const {habitName, setHabitName, className} = props;
 
   const [isInteractive, setIsInteractive] = useState(true);
 
@@ -59,11 +55,16 @@ export default function NewHabit(props){
   const {userState, setUserState} = useContext(UserContext);
 
   useEffect(()=>{
-
-  },[habits]);
+    if(!makingNewHabit){
+      setIsInteractive(true);
+      setHabitName("");
+      setCheckBoxRowState([...checkBoxRowState].fill(false));
+      setMakingNewHabit(false);
+    }
+  },[makingNewHabit]);
 
   return (
-    <NewHabbitWrapper>
+    <NewHabbitWrapper className={className}>
       <form onSubmit={submit}>
         <Input 
           type="text"

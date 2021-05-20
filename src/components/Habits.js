@@ -49,6 +49,7 @@ export default function Habits(){
       .then(({data})=>{
         setHabits(data);
         setLoading(false);
+        setMakingNewHabit(false);
       })
       .catch(()=>{
         console.log('habits.ks')
@@ -76,23 +77,20 @@ export default function Habits(){
         </header>
 
         {(()=>{
-          if(habits.length===0 && loading) return "carregando...";
+          if(habits.length === 0 && loading && !makingNewHabit) return "carregando...";
           return (
             <>
-              {!makingNewHabit
-                ? ""
-                : (
-                  <NewHabit 
-                    habits={habits}
-                    weekDays={weekDays} 
-                    checkBoxRowState={checkBoxRowState} 
-                    setCheckBoxRowState={setCheckBoxRowState}
-                    habitName={habitName}
-                    setHabitName={setHabitName}
-                    setMakingNewHabit={setMakingNewHabit}
-                  />
-                )
-              }
+              <NewHabit 
+                className={makingNewHabit?"d-block":"d-none"}
+                makingNewHabit={makingNewHabit}
+                weekDays={weekDays} 
+                checkBoxRowState={checkBoxRowState} 
+                setCheckBoxRowState={setCheckBoxRowState}
+                habitName={habitName}
+                setHabitName={setHabitName}
+                setMakingNewHabit={setMakingNewHabit}
+              />
+
       
               {habits.map(habit=>{
                 const checkBoxRowState = Array(weekDays.length).fill(false);

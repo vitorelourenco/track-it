@@ -29,7 +29,7 @@ export default function Habit(props) {
       })
       .catch(() => {
         setIsInteractive(true);
-        console.log('habit.js')
+        console.log('habit.js');
         alert("Deu ruim");
       });
   }
