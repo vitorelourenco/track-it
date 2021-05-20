@@ -69,6 +69,7 @@ const MenuWrapper = styled.footer`
   justify-content: space-between;
   font-size: 18px;
   padding: 22px 0;
+  z-index: 100;
   @media (min-width:320px){
     padding: 22px 10px;
   }

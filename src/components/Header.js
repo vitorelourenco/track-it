@@ -33,6 +33,7 @@ const HeaderWrapper = styled.header`
   top: 0;
   left: 0;
   width: 100%;
+  z-index: 100;
 
   span{
     font-size: var(--height-of-content);

@@ -11,6 +11,7 @@ import Habit from './Habit';
 import UserContext from '../contexts/UserContext';
 import {useContext} from 'react';
 import axios from 'axios';
+import LoadingCover from './LoadingCover';
 
 export default function Habits(){
 
@@ -77,7 +78,11 @@ export default function Habits(){
         </header>
 
         {(()=>{
-          if(habits.length === 0 && loading && !makingNewHabit) return "carregando...";
+          if(habits.length === 0 && loading && !makingNewHabit){
+            return (
+              <LoadingCover isInteractive={false} rgba={"rgba(62, 152, 199, 0.5)"}/>
+            );
+          }
           return (
             <>
               <NewHabit 
@@ -130,6 +135,8 @@ const MainWrapper = styled.main`
   background-color: var(--light-grey);
   padding: 80px 18px 115px 18px;
   min-height: 100vh;
+  position: relative;
+  z-index: 1;
 
   h2 {
     color: var(--dark-blue);

@@ -6,13 +6,16 @@ import UserContext from '../contexts/UserContext';
 import {useContext, useEffect, useState} from 'react';
 import axios from 'axios';
 import percentage from '../functions/percentage';
+import LoadingCover from './LoadingCover';
 var dayjs = require('dayjs');
 
 export default function Today(){
   const {userState} = useContext(UserContext);
   const [todaysHabits, setTodaysHabits] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(()=>{
+    setLoading(true);
     if(
       typeof(userState) !== "object"
       || !userState.hasOwnProperty("token")
@@ -28,10 +31,12 @@ export default function Today(){
       .get(url, config)
       .then(({data})=>{
         setTodaysHabits(data);
+        setLoading(false);
       })
       .catch(()=>{
         console.log('today.js')
         alert('Deu ruim');
+        setLoading(false);
       });
   },[userState]);
 
@@ -63,21 +68,33 @@ export default function Today(){
       <Header />
       <MainWrapper>
         <h2>{weekday}, {monthday}/{month}</h2>
-        <p>{(()=>{
-          const percent = percentage(todaysHabits, "done");
-          if(percent === 0) return "Nenhum hábito concluído ainda";
-          return (<em>{percent}% dos hábitos concluídos</em>);
-        })()}</p>
-        {todaysHabits.map(({id,name,done,currentSequence,highestSequence})=>(
-          <DailyHabitCard
-            key={id}
-            habitId={id}
-            name={name}
-            done={done}
-            currentSequence={currentSequence}
-            highestSequence={highestSequence}
-          />
-        ))}
+        {(()=>{
+
+          if(todaysHabits.length === 0 && loading){
+            return (
+              <LoadingCover isInteractive={false} rgba={"rgba(62, 152, 199, 0.5)"}/>
+            );
+          }
+          return (
+            <>
+              <p>{(()=>{
+                const percent = percentage(todaysHabits, "done");
+                if(percent === 0) return "Nenhum hábito concluído ainda";
+                return (<em>{percent}% dos hábitos concluídos</em>);
+              })()}</p>
+              {todaysHabits.map(({id,name,done,currentSequence,highestSequence})=>(
+                <DailyHabitCard
+                  key={id}
+                  habitId={id}
+                  name={name}
+                  done={done}
+                  currentSequence={currentSequence}
+                  highestSequence={highestSequence}
+                />
+              ))}
+            </>
+          );
+        })()}
       </MainWrapper>
       <Menu /> 
     </>
@@ -88,6 +105,8 @@ const MainWrapper = styled.main`
   background-color: var(--light-grey);
   padding: 80px 18px 115px 18px;
   min-height: 100vh;
+  z-index: 1;
+  position: relative;
 
   & > h2 {
     color: var(--dark-blue);
