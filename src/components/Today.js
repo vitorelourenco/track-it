@@ -53,7 +53,11 @@ export default function Today(){
   const weekday = getWeekDay(now.day());
   const monthday = now.date();
   const month = now.month()+1;
-  console.log(`${weekday}, ${monthday}/${month}`);
+
+  if(localStorage.getItem("user") === null){
+    window.location.href="/";
+    return "";
+  }
 
   return (
     <>

@@ -1,8 +1,17 @@
 import Header from './Header';
 import Menu from './Menu';
 import styled from 'styled-components';
+import UserContext from '../contexts/UserContext';
+import {useContext} from 'react';
 
 export default function History(){
+  const {userState} = useContext(UserContext);
+
+  if(localStorage.getItem("user") === null){
+    window.location.href="/";
+    return "";
+  }
+  
   return (
     <>
       <Header />

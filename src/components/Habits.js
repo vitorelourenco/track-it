@@ -54,6 +54,10 @@ export default function Habits(){
   },[userState]);
 
 
+  if(localStorage.getItem("user") === null){
+    window.location.href="/";
+    return "";
+  }
 
   return (
     <>
@@ -67,37 +71,45 @@ export default function Habits(){
           </PlusButton>
         </header>
 
-        {!makingNewHabit
-          ? ""
-          : (
-            <NewHabit 
-              habits={habits}
-              weekDays={weekDays} 
-              checkBoxRowState={checkBoxRowState} 
-              setCheckBoxRowState={setCheckBoxRowState}
-              habitName={habitName}
-              setHabitName={setHabitName}
-              setMakingNewHabit={setMakingNewHabit}
-            />
-          )
-        }
-
-        {habits.map(habit=>{
-          const checkBoxRowState = Array(weekDays.length).fill(false);
-          habit.days.forEach((day)=>{checkBoxRowState[day]=true});
-
+        {(()=>{
+          if(habits.length===0) return "carregando...";
           return (
-            <Habit 
-              habits={habits}
-              key={habit.id}
-              weekDays={weekDays} 
-              checkBoxRowState={checkBoxRowState} 
-              habitName={habit.name}
-              id={habit.id}
-            />
+            <>
+              {!makingNewHabit
+                ? ""
+                : (
+                  <NewHabit 
+                    habits={habits}
+                    weekDays={weekDays} 
+                    checkBoxRowState={checkBoxRowState} 
+                    setCheckBoxRowState={setCheckBoxRowState}
+                    habitName={habitName}
+                    setHabitName={setHabitName}
+                    setMakingNewHabit={setMakingNewHabit}
+                  />
+                )
+              }
+      
+              {habits.map(habit=>{
+                const checkBoxRowState = Array(weekDays.length).fill(false);
+                habit.days.forEach((day)=>{checkBoxRowState[day]=true});
+      
+                return (
+                  <Habit 
+                    habits={habits}
+                    key={habit.id}
+                    weekDays={weekDays} 
+                    checkBoxRowState={checkBoxRowState} 
+                    habitName={habit.name}
+                    id={habit.id}
+                  />
+                );
+              })}
+              {habits.length === 0? <NoHabitsParagraph /> : ""}
+            </>
           );
-        })}
-        {habits.length === 0? <NoHabitsParagraph /> : ""}
+        })()}
+        
       </MainWrapper>
       <Menu /> 
     </>
