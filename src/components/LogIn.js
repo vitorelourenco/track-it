@@ -36,8 +36,7 @@ export default function LogIn() {
       })
       .catch((err) => {
         setIsInteractive(true);
-        console.log("login.js");
-        alert("Deu ruim");
+        alert("Requisicao de login recusada");
       });
   }
 

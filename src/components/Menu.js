@@ -6,12 +6,11 @@ import { useContext, useEffect } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import percentage from "../functions/percentage";
-import TodaysContext from '../contexts/TodaysContext';
-
+import TodaysContext from "../contexts/TodaysContext";
 
 export default function Menu() {
   const { userState } = useContext(UserContext);
-  const {todaysHabits, setTodaysHabits} = useContext(TodaysContext);
+  const { todaysHabits, setTodaysHabits } = useContext(TodaysContext);
   const history = useHistory();
 
   useEffect(() => {
@@ -31,8 +30,7 @@ export default function Menu() {
         setTodaysHabits(data);
       })
       .catch(() => {
-        console.log("menu.js");
-        alert("Deu ruim");
+        alert("Erro na requisicao de habitos do dia");
       });
   }, [userState]);
 

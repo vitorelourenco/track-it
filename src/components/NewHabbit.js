@@ -37,8 +37,7 @@ export default function NewHabit(props) {
         setUserState({ ...userState });
       })
       .catch(() => {
-        console.log("newhabbit.js");
-        alert("Deu ruim");
+        alert("Erro ao adicionar um novo habito");
         setIsInteractive(true);
       });
   }

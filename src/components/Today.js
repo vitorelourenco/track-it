@@ -33,15 +33,13 @@ export default function Today() {
   }
 
   const { userState } = useContext(UserContext);
-  const {todaysHabits, setTodaysHabits} = useContext(TodaysContext);
+  const { todaysHabits, setTodaysHabits } = useContext(TodaysContext);
   const now = dayjs();
   const weekday = getWeekDay(now.day());
   const monthday = now.date();
   const month = now.month() + 1;
 
   useEffect(() => {
-    console.log("entrou today");
-
     if (typeof userState !== "object" || !userState.hasOwnProperty("token"))
       return;
 
@@ -58,8 +56,7 @@ export default function Today() {
         setTodaysHabits(data);
       })
       .catch(() => {
-        console.log("today.js");
-        alert("Deu ruim");
+        alert("Erro ao buscar habitos diarios");
       });
   }, [userState]);
 

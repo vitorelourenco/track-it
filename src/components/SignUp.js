@@ -29,11 +29,9 @@ export default function SingUp() {
           pathname: "/",
         });
       })
-      .catch((err) => {
-        alert("Deu ruim");
-        console.log("signup.js");
+      .catch(() => {
+        alert("Erro ao tentar cadastrar");
         setIsInteractive(true);
-        console.log(err);
       });
   }
 

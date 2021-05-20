@@ -26,7 +26,7 @@ export default function DailyHabitCard(props) {
         setUserState({ ...userState });
       })
       .catch(() => {
-        console.log("Deu ruim");
+        alert("Erro ao tentar marcar/desmarcar habito");
         setIsInteractive(true);
       });
   }

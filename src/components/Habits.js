@@ -9,7 +9,7 @@ import UserContext from "../contexts/UserContext";
 import { useContext } from "react";
 import axios from "axios";
 
-export default function Habits({habits, setHabits}) {
+export default function Habits({ habits, setHabits }) {
   const weekDays = [
     { char: "D", id: 0 },
     { char: "S", id: 1 },
@@ -45,8 +45,7 @@ export default function Habits({habits, setHabits}) {
         setMakingNewHabit(false);
       })
       .catch(() => {
-        console.log("habits.ks");
-        alert("Deu ruim");
+        alert("Erro na requisicao de habitos");
       });
   }, [userState]);
 
@@ -95,7 +94,6 @@ export default function Habits({habits, setHabits}) {
           );
         })}
         {habits.length === 0 ? <NoHabitsParagraph /> : ""}
- 
       </MainWrapper>
       <Menu />
     </>

@@ -27,8 +27,7 @@ export default function Habit(props) {
       })
       .catch(() => {
         setIsInteractive(true);
-        console.log("habit.js");
-        alert("Deu ruim");
+        alert("Erro ao tentar deletar habito");
       });
   }
 
