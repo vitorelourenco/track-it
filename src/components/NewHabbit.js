@@ -61,7 +61,7 @@ export default function NewHabit(props) {
   );
 
   useEffect(() => {
-    if (!makingNewHabit) {
+    if (!makingNewHabit && !isInteractive) {
       setIsInteractive(true);
       setHabitName("");
       setCheckBoxRowState([...checkBoxRowState].fill(false));

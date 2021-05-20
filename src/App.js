@@ -14,12 +14,14 @@ import {useState, useEffect} from 'react';
 import UserContext from './contexts/UserContext';
 import NavContext from './contexts/NavContext';
 import {useHistory, useLocation} from 'react-router-dom';
-
+import TodaysContext from './contexts/TodaysContext';
 
 function App() {
 
   const [userState, setUserState] = useState(undefined);
   const [navState, setNavState] = useState(false);
+  const [todaysHabits, setTodaysHabits] = useState([]);
+  const [habits, setHabits] = useState([]);
 
   const history = useHistory();
   const location = useLocation();
@@ -37,28 +39,30 @@ function App() {
 
   return (
     <UserContext.Provider value={{userState, setUserState}}>
-      <NavContext.Provider value={{navState, setNavState}}>
-        <GlobalStylesReset />
-        <GlobalStylesVEL />
-        <GlobalStylesTrackIt />
-        <Switch>
-          <Route exact path="/habitos">
-            <Habits />
-          </Route>
-          <Route exact path="/hoje">
-            <Today />
-          </Route>
-          <Route exact path="/historico">
-            <History />
-          </Route>
-          <Route exact path="/cadastro">
-            <SignUp />
-          </Route>
-          <Route path="/">
-            <LogIn />
-          </Route>
-        </Switch>
-      </NavContext.Provider>
+      <TodaysContext.Provider value={{todaysHabits, setTodaysHabits}}>
+        <NavContext.Provider value={{navState, setNavState}}>
+          <GlobalStylesReset />
+          <GlobalStylesVEL />
+          <GlobalStylesTrackIt />
+          <Switch>
+            <Route exact path="/habitos">
+              <Habits habits={habits} setHabits={setHabits} />
+            </Route>
+            <Route exact path="/hoje">
+              <Today />
+            </Route>
+            <Route exact path="/historico">
+              <History />
+            </Route>
+            <Route exact path="/cadastro">
+              <SignUp />
+            </Route>
+            <Route path="/">
+              <LogIn />
+            </Route>
+          </Switch>
+        </NavContext.Provider>
+      </TodaysContext.Provider>
     </UserContext.Provider>
   );
 }

@@ -63,8 +63,7 @@ const CalendarDay = styled.div`
 
 const MainWrapper = styled.main`
   background-color: var(--light-grey);
-  padding: 80px 18px 115px 18px;
-  min-height: 100vh;
+  padding: 23px 18px 53px 18px;
 
   .react-calendar {
     border-radius: 5px;

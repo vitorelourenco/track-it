@@ -8,9 +8,8 @@ import Habit from "./Habit";
 import UserContext from "../contexts/UserContext";
 import { useContext } from "react";
 import axios from "axios";
-import LoadingCover from "./LoadingCover";
 
-export default function Habits() {
+export default function Habits({habits, setHabits}) {
   const weekDays = [
     { char: "D", id: 0 },
     { char: "S", id: 1 },
@@ -26,15 +25,12 @@ export default function Habits() {
   );
   const [habitName, setHabitName] = useState("");
   const [makingNewHabit, setMakingNewHabit] = useState(false);
-  const [habits, setHabits] = useState([]);
   const { userState } = useContext(UserContext);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (typeof userState !== "object" || !userState.hasOwnProperty("token"))
       return;
 
-    setLoading(true);
     const url =
       "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
     const config = {
@@ -46,13 +42,11 @@ export default function Habits() {
       .get(url, config)
       .then(({ data }) => {
         setHabits(data);
-        setLoading(false);
         setMakingNewHabit(false);
       })
       .catch(() => {
         console.log("habits.ks");
         alert("Deu ruim");
-        setLoading(false);
       });
   }, [userState]);
 
@@ -72,49 +66,36 @@ export default function Habits() {
           </PlusButton>
         </header>
 
-        {(() => {
-          if (habits.length === 0 && loading && !makingNewHabit) {
-            return (
-              <LoadingCover
-                isInteractive={false}
-                rgba={"rgba(62, 152, 199, 0.5)"}
-              />
-            );
-          }
+        <NewHabit
+          className={makingNewHabit ? "d-block" : "d-none"}
+          makingNewHabit={makingNewHabit}
+          weekDays={weekDays}
+          checkBoxRowState={checkBoxRowState}
+          setCheckBoxRowState={setCheckBoxRowState}
+          habitName={habitName}
+          setHabitName={setHabitName}
+          setMakingNewHabit={setMakingNewHabit}
+        />
+
+        {habits.map((habit) => {
+          const checkBoxRowState = Array(weekDays.length).fill(false);
+          habit.days.forEach((day) => {
+            checkBoxRowState[day] = true;
+          });
+
           return (
-            <>
-              <NewHabit
-                className={makingNewHabit ? "d-block" : "d-none"}
-                makingNewHabit={makingNewHabit}
-                weekDays={weekDays}
-                checkBoxRowState={checkBoxRowState}
-                setCheckBoxRowState={setCheckBoxRowState}
-                habitName={habitName}
-                setHabitName={setHabitName}
-                setMakingNewHabit={setMakingNewHabit}
-              />
-
-              {habits.map((habit) => {
-                const checkBoxRowState = Array(weekDays.length).fill(false);
-                habit.days.forEach((day) => {
-                  checkBoxRowState[day] = true;
-                });
-
-                return (
-                  <Habit
-                    habits={habits}
-                    key={habit.id}
-                    weekDays={weekDays}
-                    checkBoxRowState={checkBoxRowState}
-                    habitName={habit.name}
-                    id={habit.id}
-                  />
-                );
-              })}
-              {habits.length === 0 ? <NoHabitsParagraph /> : ""}
-            </>
+            <Habit
+              habits={habits}
+              key={habit.id}
+              weekDays={weekDays}
+              checkBoxRowState={checkBoxRowState}
+              habitName={habit.name}
+              id={habit.id}
+            />
           );
-        })()}
+        })}
+        {habits.length === 0 ? <NoHabitsParagraph /> : ""}
+ 
       </MainWrapper>
       <Menu />
     </>
@@ -132,8 +113,7 @@ function NoHabitsParagraph() {
 
 const MainWrapper = styled.main`
   background-color: var(--light-grey);
-  padding: 80px 18px 115px 18px;
-  min-height: 100vh;
+  padding: 23px 18px 53px 18px;
   position: relative;
   z-index: 1;
 

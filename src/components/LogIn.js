@@ -33,7 +33,6 @@ export default function LogIn() {
         history.push({
           pathname: "/hoje",
         });
-        console.log(data);
       })
       .catch((err) => {
         setIsInteractive(true);
@@ -85,6 +84,8 @@ const MainWrapper = styled.main`
   align-items: center;
   padding: 135px 36px 36px 36px;
   background-color: white;
+  margin: 0;
+  height: 100vh;
 
   form {
     width: 100%;

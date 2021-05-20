@@ -14,6 +14,13 @@ const GlobalStylesTrackIt = createGlobalStyle`
   body {
     font-family: var(--body-font);
   }
+
+  main{
+    height: calc(100vh - 57px - 62px);
+    margin-top: 57px;
+    margin-bottom: 62px;
+    overflow-Y: scroll;
+  }
 `;
 
 export default GlobalStylesTrackIt;

@@ -2,14 +2,16 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import styled from "styled-components";
 import UserContext from "../contexts/UserContext";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import percentage from "../functions/percentage";
+import TodaysContext from '../contexts/TodaysContext';
+
 
 export default function Menu() {
   const { userState } = useContext(UserContext);
-  const [todaysHabits, setTodaysHabits] = useState([]);
+  const {todaysHabits, setTodaysHabits} = useContext(TodaysContext);
   const history = useHistory();
 
   useEffect(() => {

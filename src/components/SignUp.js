@@ -23,9 +23,8 @@ export default function SingUp() {
     const body = { email, name, image, password };
     axios
       .post(url, body)
-      .then(({ data }) => {
+      .then(() => {
         setIsInteractive(true);
-        console.log(data);
         history.push({
           pathname: "/",
         });
@@ -97,6 +96,8 @@ const MainWrapper = styled.main`
   align-items: center;
   padding: 68px 36px 36px 36px;
   background-color: white;
+  margin: 0;
+  height: 100vh;
 
   input,
   button {

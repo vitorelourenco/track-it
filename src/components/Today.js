@@ -3,6 +3,7 @@ import Menu from "./Menu";
 import styled from "styled-components";
 import TodaysHabitsCard from "./TodaysHabitsCard";
 import UserContext from "../contexts/UserContext";
+import TodaysContext from "../contexts/TodaysContext";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import percentage from "../functions/percentage";
@@ -32,15 +33,15 @@ export default function Today() {
   }
 
   const { userState } = useContext(UserContext);
-  const [todaysHabits, setTodaysHabits] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const {todaysHabits, setTodaysHabits} = useContext(TodaysContext);
   const now = dayjs();
   const weekday = getWeekDay(now.day());
   const monthday = now.date();
   const month = now.month() + 1;
 
   useEffect(() => {
-    setLoading(true);
+    console.log("entrou today");
+
     if (typeof userState !== "object" || !userState.hasOwnProperty("token"))
       return;
 
@@ -55,12 +56,10 @@ export default function Today() {
       .get(url, config)
       .then(({ data }) => {
         setTodaysHabits(data);
-        setLoading(false);
       })
       .catch(() => {
         console.log("today.js");
         alert("Deu ruim");
-        setLoading(false);
       });
   }, [userState]);
 
@@ -76,39 +75,25 @@ export default function Today() {
         <h2>
           {weekday}, {monthday}/{month}
         </h2>
-        {(() => {
-          if (todaysHabits.length === 0 && loading) {
-            return (
-              <LoadingCover
-                isInteractive={false}
-                rgba={"rgba(62, 152, 199, 0.5)"}
-              />
-            );
-          }
-          return (
-            <>
-              <p>
-                {(() => {
-                  const percent = percentage(todaysHabits, "done");
-                  if (percent === 0) return "Nenhum hábito concluído ainda";
-                  return <em>{percent}% dos hábitos concluídos</em>;
-                })()}
-              </p>
-              {todaysHabits.map(
-                ({ id, name, done, currentSequence, highestSequence }) => (
-                  <TodaysHabitsCard
-                    key={id}
-                    habitId={id}
-                    name={name}
-                    done={done}
-                    currentSequence={currentSequence}
-                    highestSequence={highestSequence}
-                  />
-                )
-              )}
-            </>
-          );
-        })()}
+        <p>
+          {(() => {
+            const percent = percentage(todaysHabits, "done");
+            if (percent === 0) return "Nenhum hábito concluído ainda";
+            return <em>{percent}% dos hábitos concluídos</em>;
+          })()}
+        </p>
+        {todaysHabits.map(
+          ({ id, name, done, currentSequence, highestSequence }) => (
+            <TodaysHabitsCard
+              key={id}
+              habitId={id}
+              name={name}
+              done={done}
+              currentSequence={currentSequence}
+              highestSequence={highestSequence}
+            />
+          )
+        )}
       </MainWrapper>
       <Menu />
     </>
@@ -117,8 +102,7 @@ export default function Today() {
 
 const MainWrapper = styled.main`
   background-color: var(--light-grey);
-  padding: 80px 18px 115px 18px;
-  min-height: 100vh;
+  padding: 23px 18px 53px 18px;
   z-index: 1;
   position: relative;
 
