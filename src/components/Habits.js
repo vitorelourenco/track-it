@@ -29,6 +29,7 @@ export default function Habits(){
   const [makingNewHabit, setMakingNewHabit] = useState(false);
   const [habits, setHabits] = useState([]);
   const {userState} = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
 
   useEffect(()=>{
     if(
@@ -36,6 +37,7 @@ export default function Habits(){
       || !userState.hasOwnProperty("token")
     ) return;
 
+    setLoading(true);
     const url = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
     const config = {
       headers:{
@@ -46,10 +48,12 @@ export default function Habits(){
       .get(url,config)
       .then(({data})=>{
         setHabits(data);
+        setLoading(false);
       })
       .catch(()=>{
         console.log('habits.ks')
         alert('Deu ruim');
+        setLoading(false);
       });
   },[userState]);
 
@@ -72,7 +76,7 @@ export default function Habits(){
         </header>
 
         {(()=>{
-          if(habits.length===0) return "carregando...";
+          if(habits.length===0 && loading) return "carregando...";
           return (
             <>
               {!makingNewHabit
