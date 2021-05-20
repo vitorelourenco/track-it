@@ -15,6 +15,8 @@ import UserContext from './contexts/UserContext';
 import NavContext from './contexts/NavContext';
 import {useHistory, useLocation} from 'react-router-dom';
 import TodaysContext from './contexts/TodaysContext';
+import LoadingCover from './components/LoadingCover';
+import axios from 'axios';
 
 function App() {
 
@@ -23,19 +25,59 @@ function App() {
   const [todaysHabits, setTodaysHabits] = useState([]);
   const [habits, setHabits] = useState([]);
 
+  const [loginTriggered, setLoginTriggered] = useState(false);
+  const [loginResolved, setLoginResolved] = useState(false);
+
   const history = useHistory();
   const location = useLocation();
+  const pathName = location.pathname;
 
   useEffect(()=>{
     const localUser = localStorage.getItem("user");
-    const pathName = location.pathname;
     if (localUser !== null){
       setUserState(JSON.parse(localUser));
-      if (pathName!=="/hoje" && pathName!=="/historico" && pathName!=="/habitos"){
-        history.push("/hoje");
-      }
+      setLoginTriggered(true);
     }
   },[]);
+
+  useEffect(()=>{
+    if(loginTriggered && !loginResolved && userState && userState.token){
+      const config = {
+        headers: {
+            Authorization: `Bearer ${userState.token}`,
+        },
+      };
+      const urlHabits = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
+      const urlTodaysHabits = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today";
+      const promiseHabits = axios.get(urlHabits, config);
+      const promiteTodaysHabits = axios.get(urlTodaysHabits, config);
+      Promise.all([promiseHabits,promiteTodaysHabits]).then(arrValues=>{
+        setHabits(arrValues[0].data);
+        setTodaysHabits(arrValues[1].data);
+        setLoginResolved(true);
+      })
+      .catch(()=>{
+        alert("Falha no login");
+        setLoginTriggered(false);
+      })
+    }
+  },[loginTriggered,loginResolved])
+
+  useEffect(()=>{
+    if (loginResolved){
+      if(pathName==="/historico") history.push(pathName);
+      if(pathName==="/habitos") history.push(pathName);
+      history.push("/hoje");
+    }
+  },[loginResolved])
+
+  if(loginTriggered && !loginResolved && pathName==="/"){
+    return <LoadingCover isInteractive={false} rgba={"rgba(18,107,165,1)"} />
+  }
+
+  if(!loginResolved && pathName!=="/" && pathName!=="/cadastro"){
+    history.push("/");
+  }
 
   return (
     <UserContext.Provider value={{userState, setUserState}}>
@@ -58,7 +100,7 @@ function App() {
               <SignUp />
             </Route>
             <Route path="/">
-              <LogIn />
+              <LogIn setLoginTriggered={setLoginTriggered} setLoginResolved={setLoginResolved}/>
             </Route>
           </Switch>
         </NavContext.Provider>
