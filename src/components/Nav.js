@@ -3,8 +3,8 @@ import logout from '../functions/logout';
 
 export default function Nav(props){
   return (
-    <Navbar isShowing={props.isShowing}>
-      <p onClick={logout}>LogOut</p>
+    <Navbar onClick={logout} isShowing={props.isShowing}>
+      <p>LogOut</p>
     </Navbar>
   );
 }
