@@ -1,47 +1,46 @@
-import styled from 'styled-components';
-import Input from './Input';
-import Logo from './Logo';
-import SubmitButton from './SubmitButton';
-import {useState} from 'react';
-import {Link} from 'react-router-dom';
-import axios from 'axios';
-import {useHistory} from 'react-router-dom';
-import ThreeDots from './ThreeDots';
+import styled from "styled-components";
+import Input from "./Input";
+import Logo from "./Logo";
+import SubmitButton from "./SubmitButton";
+import { useState } from "react";
+import { useHistory, Link } from "react-router-dom";
+import axios from "axios";
+import ThreeDots from "./ThreeDots";
 
-export default function SingUp(){
+export default function SingUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
   const [isInteractive, setIsInteractive] = useState(true);
-
   const history = useHistory();
 
-  function submit(e){
+  function submit(e) {
     e.preventDefault();
     setIsInteractive(false);
-    const url = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up"
-    const body = {email,name,image,password}
+    const url =
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up";
+    const body = { email, name, image, password };
     axios
-    .post(url,body)
-    .then(({data})=>{
-      setIsInteractive(true);
-      console.log(data);
-      history.push({
-        pathname:"/",
+      .post(url, body)
+      .then(({ data }) => {
+        setIsInteractive(true);
+        console.log(data);
+        history.push({
+          pathname: "/",
+        });
+      })
+      .catch((err) => {
+        alert("Deu ruim");
+        console.log("signup.js");
+        setIsInteractive(true);
+        console.log(err);
       });
-    })
-    .catch((err)=>{
-      alert('Deu ruim');
-      console.log('signup.js')
-      setIsInteractive(true);
-      console.log(err);
-    })
   }
 
-  return(
-    <MainWrapper> 
-      <Logo logoWidth="160"/>
+  return (
+    <MainWrapper>
+      <Logo logoWidth="160" />
       <span>TrackIt</span>
       <form onSubmit={submit}>
         <Input
@@ -50,42 +49,45 @@ export default function SingUp(){
           state={email}
           setState={setEmail}
           required={true}
-          disabled={isInteractive?false:true}
+          disabled={isInteractive ? false : true}
         />
-        <Input 
+        <Input
           type="password"
           placeholder="senha"
           state={password}
           setState={setPassword}
           required={true}
-          disabled={isInteractive?false:true}
+          disabled={isInteractive ? false : true}
         />
-        <Input 
+        <Input
           type="text"
           placeholder="nome"
           state={name}
           setState={setName}
           required={true}
-          disabled={isInteractive?false:true}
+          disabled={isInteractive ? false : true}
         />
-        <Input 
+        <Input
           type="url"
           placeholder="foto"
           state={image}
           setState={setImage}
           required={true}
-          disabled={isInteractive?false:true}
+          disabled={isInteractive ? false : true}
         />
-        <SubmitButton 
-          text={isInteractive?"Cadastrar":<ThreeDots iconHeight="10px" iconWidth="100px"/>}
-          disabled={isInteractive?false:true}
+        <SubmitButton
+          text={
+            isInteractive ? (
+              "Cadastrar"
+            ) : (
+              <ThreeDots iconHeight="10px" iconWidth="100px" />
+            )
+          }
+          disabled={isInteractive ? false : true}
         />
       </form>
-      <Link to="/">
-        Já tem uma conta? Faça login!
-      </Link>
+      <Link to="/">Já tem uma conta? Faça login!</Link>
     </MainWrapper>
-
   );
 }
 

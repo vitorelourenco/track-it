@@ -1,67 +1,63 @@
-import Header from './Header';
-import Menu from './Menu';
-import styled from 'styled-components';
-import { Add } from 'react-ionicons'
+import Header from "./Header";
+import Menu from "./Menu";
+import styled from "styled-components";
+import { Add } from "react-ionicons";
+import { useEffect, useState } from "react";
+import NewHabit from "./NewHabbit";
+import Habit from "./Habit";
+import UserContext from "../contexts/UserContext";
+import { useContext } from "react";
+import axios from "axios";
+import LoadingCover from "./LoadingCover";
 
-import {useEffect, useState} from 'react';
-
-import NewHabit from './NewHabbit';
-import Habit from './Habit';
-
-import UserContext from '../contexts/UserContext';
-import {useContext} from 'react';
-import axios from 'axios';
-import LoadingCover from './LoadingCover';
-
-export default function Habits(){
-
+export default function Habits() {
   const weekDays = [
-    {char:"D", id:0},
-    {char:"S", id:1},
-    {char:"T", id:2},
-    {char:"Q", id:3},
-    {char:"Q", id:4},
-    {char:"S", id:5},
-    {char:"S", id:6}
+    { char: "D", id: 0 },
+    { char: "S", id: 1 },
+    { char: "T", id: 2 },
+    { char: "Q", id: 3 },
+    { char: "Q", id: 4 },
+    { char: "S", id: 5 },
+    { char: "S", id: 6 },
   ];
 
-  const [checkBoxRowState, setCheckBoxRowState] = useState(Array(weekDays.length).fill(false));
+  const [checkBoxRowState, setCheckBoxRowState] = useState(
+    Array(weekDays.length).fill(false)
+  );
   const [habitName, setHabitName] = useState("");
   const [makingNewHabit, setMakingNewHabit] = useState(false);
   const [habits, setHabits] = useState([]);
-  const {userState} = useContext(UserContext);
+  const { userState } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
 
-  useEffect(()=>{
-    if(
-      typeof(userState) !== "object"
-      || !userState.hasOwnProperty("token")
-    ) return;
+  useEffect(() => {
+    if (typeof userState !== "object" || !userState.hasOwnProperty("token"))
+      return;
 
     setLoading(true);
-    const url = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
+    const url =
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
     const config = {
-      headers:{
-        Authorization: `Bearer ${userState.token}`
-      }
-    }
+      headers: {
+        Authorization: `Bearer ${userState.token}`,
+      },
+    };
     axios
-      .get(url,config)
-      .then(({data})=>{
+      .get(url, config)
+      .then(({ data }) => {
         setHabits(data);
         setLoading(false);
         setMakingNewHabit(false);
       })
-      .catch(()=>{
-        console.log('habits.ks')
-        alert('Deu ruim');
+      .catch(() => {
+        console.log("habits.ks");
+        alert("Deu ruim");
         setLoading(false);
       });
-  },[userState]);
+  }, [userState]);
 
-
-  if(localStorage.getItem("user") === null){
-    window.location.href="/";
+  if (localStorage.getItem("user") === null) {
+    window.location.href = "/";
     return "";
   }
 
@@ -69,64 +65,67 @@ export default function Habits(){
     <>
       <Header />
       <MainWrapper>
-
         <header>
           <h2>Meus Hábitos</h2>
-          <PlusButton onClick={()=>setMakingNewHabit(true)}>
+          <PlusButton onClick={() => setMakingNewHabit(true)}>
             <Add color={"#ffffff"} />
           </PlusButton>
         </header>
 
-        {(()=>{
-          if(habits.length === 0 && loading && !makingNewHabit){
+        {(() => {
+          if (habits.length === 0 && loading && !makingNewHabit) {
             return (
-              <LoadingCover isInteractive={false} rgba={"rgba(62, 152, 199, 0.5)"}/>
+              <LoadingCover
+                isInteractive={false}
+                rgba={"rgba(62, 152, 199, 0.5)"}
+              />
             );
           }
           return (
             <>
-              <NewHabit 
-                className={makingNewHabit?"d-block":"d-none"}
+              <NewHabit
+                className={makingNewHabit ? "d-block" : "d-none"}
                 makingNewHabit={makingNewHabit}
-                weekDays={weekDays} 
-                checkBoxRowState={checkBoxRowState} 
+                weekDays={weekDays}
+                checkBoxRowState={checkBoxRowState}
                 setCheckBoxRowState={setCheckBoxRowState}
                 habitName={habitName}
                 setHabitName={setHabitName}
                 setMakingNewHabit={setMakingNewHabit}
               />
 
-      
-              {habits.map(habit=>{
+              {habits.map((habit) => {
                 const checkBoxRowState = Array(weekDays.length).fill(false);
-                habit.days.forEach((day)=>{checkBoxRowState[day]=true});
-      
+                habit.days.forEach((day) => {
+                  checkBoxRowState[day] = true;
+                });
+
                 return (
-                  <Habit 
+                  <Habit
                     habits={habits}
                     key={habit.id}
-                    weekDays={weekDays} 
-                    checkBoxRowState={checkBoxRowState} 
+                    weekDays={weekDays}
+                    checkBoxRowState={checkBoxRowState}
                     habitName={habit.name}
                     id={habit.id}
                   />
                 );
               })}
-              {habits.length === 0? <NoHabitsParagraph /> : ""}
+              {habits.length === 0 ? <NoHabitsParagraph /> : ""}
             </>
           );
         })()}
-        
       </MainWrapper>
-      <Menu /> 
+      <Menu />
     </>
-  )
+  );
 }
 
-function NoHabitsParagraph(){
+function NoHabitsParagraph() {
   return (
     <p>
-      Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!
+      Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para
+      começar a trackear!
     </p>
   );
 }
@@ -169,5 +168,5 @@ const PlusButton = styled.button`
   color: white;
   background-color: var(--light-blue);
   cursor: pointer;
-  opacity: ${(props)=>props.disabled?0.7:1};
+  opacity: ${(props) => (props.disabled ? 0.7 : 1)};
 `;

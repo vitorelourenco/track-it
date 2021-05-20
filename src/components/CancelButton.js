@@ -1,19 +1,18 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-export default function CancelButton(props){
-  const {text} = props;
-  const {className, onClick, disabled} = props;
+export default function CancelButton(props) {
+  const { className, onClick, disabled, text } = props;
 
   return (
-    <ButtonWrapper 
+    <ButtonWrapper
       type="reset"
       disabled={disabled}
       className={className}
-      onClick={typeof(onClick) === "function" ? onClick : (()=>undefined)}
+      onClick={typeof onClick === "function" ? onClick : () => undefined}
     >
       {text}
     </ButtonWrapper>
-  )
+  );
 }
 
 const ButtonWrapper = styled.button`
@@ -26,5 +25,5 @@ const ButtonWrapper = styled.button`
   color: var(--light-blue);
   background-color: white;
   cursor: pointer;
-  opacity: ${(props)=>props.disabled?0.7:1}
+  opacity: ${(props) => (props.disabled ? 0.7 : 1)};
 `;

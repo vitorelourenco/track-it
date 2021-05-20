@@ -1,72 +1,78 @@
-import SubmitButton from './SubmitButton';
-import CancelButton from './CancelButton';
-import CheckBox from './CheckBox';
-import Input from './Input';
-import styled from 'styled-components';
-import {useEffect, useState} from 'react';
-import axios from 'axios';
-import UserContext from '../contexts/UserContext';
-import {useContext} from 'react';
-import ThreeDots from './ThreeDots';
+import SubmitButton from "./SubmitButton";
+import CancelButton from "./CancelButton";
+import CheckBox from "./CheckBox";
+import Input from "./Input";
+import styled from "styled-components";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import UserContext from "../contexts/UserContext";
+import { useContext } from "react";
+import ThreeDots from "./ThreeDots";
 
-export default function NewHabit(props){
-  function cancel(e){
+export default function NewHabit(props) {
+  function cancel(e) {
     e.preventDefault();
     setMakingNewHabit(false);
   }
 
-  function submit(e){
+  function submit(e) {
     e.preventDefault();
-    const days = 
-      checkBoxRowState
-      .map((elem,i)=>elem!==false?i:false)
-      .filter(elem=>elem!==false);
+    const days = checkBoxRowState
+      .map((elem, i) => (elem !== false ? i : false))
+      .filter((elem) => elem !== false);
     const name = habitName;
-    const url = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
-    const body = {name, days};
+    const url =
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
+    const body = { name, days };
     const config = {
-      headers:{
-        Authorization: `Bearer ${userState.token}`
-      }
-    }
+      headers: {
+        Authorization: `Bearer ${userState.token}`,
+      },
+    };
 
     setIsInteractive(false);
     axios
-      .post(url,body,config)
-      .then(()=>{
-        setUserState({...userState});
+      .post(url, body, config)
+      .then(() => {
+        setUserState({ ...userState });
       })
-      .catch(()=>{
-        console.log('newhabbit.js')
-        alert('Deu ruim');
+      .catch(() => {
+        console.log("newhabbit.js");
+        alert("Deu ruim");
         setIsInteractive(true);
-      })
+      });
   }
 
-  const {weekDays} = props;
-  const {checkBoxRowState, setCheckBoxRowState} = props;
-  const {setMakingNewHabit , makingNewHabit} = props;
-  const {habitName, setHabitName, className} = props;
-
+  const {
+    weekDays,
+    checkBoxRowState,
+    setCheckBoxRowState,
+    setMakingNewHabit,
+    makingNewHabit,
+    habitName,
+    setHabitName,
+    className,
+  } = props;
+  const { userState, setUserState } = useContext(UserContext);
   const [isInteractive, setIsInteractive] = useState(true);
+  const dayIsRequired = !checkBoxRowState.reduce(
+    (acc, bol) => (acc = acc || bol),
+    false
+  );
 
-  const dayIsRequired = !checkBoxRowState.reduce((acc,bol)=>acc=acc||bol,false);
-
-  const {userState, setUserState} = useContext(UserContext);
-
-  useEffect(()=>{
-    if(!makingNewHabit){
+  useEffect(() => {
+    if (!makingNewHabit) {
       setIsInteractive(true);
       setHabitName("");
       setCheckBoxRowState([...checkBoxRowState].fill(false));
       setMakingNewHabit(false);
     }
-  },[makingNewHabit]);
+  }, [makingNewHabit]);
 
   return (
     <NewHabbitWrapper className={className}>
       <form onSubmit={submit}>
-        <Input 
+        <Input
           type="text"
           placeholder="nome do hábito"
           state={habitName}
@@ -76,8 +82,8 @@ export default function NewHabit(props){
           name="habitName"
         />
         <WeekDays>
-          {weekDays.map(({char, id}, i)=>
-            <CheckBox 
+          {weekDays.map(({ char, id }, i) => (
+            <CheckBox
               key={id}
               index={i}
               state={checkBoxRowState}
@@ -87,21 +93,30 @@ export default function NewHabit(props){
               required={dayIsRequired}
               name="days"
             />
-          )}
+          ))}
         </WeekDays>
         <ButtonBox>
-          <CancelButton disabled={!isInteractive} onClick={cancel} text="Cancelar"/>
-          <SubmitButton 
-            style={{width: "80px"}}
-            disabled={!isInteractive} 
-            text={!isInteractive?<ThreeDots iconHeight="10px" iconWidth="30px"/>:"Salvar"}
+          <CancelButton
+            disabled={!isInteractive}
+            onClick={cancel}
+            text="Cancelar"
+          />
+          <SubmitButton
+            style={{ width: "80px" }}
+            disabled={!isInteractive}
+            text={
+              !isInteractive ? (
+                <ThreeDots iconHeight="10px" iconWidth="30px" />
+              ) : (
+                "Salvar"
+              )
+            }
           />
         </ButtonBox>
       </form>
     </NewHabbitWrapper>
   );
 }
-
 
 const NewHabbitWrapper = styled.article`
   background-color: white;
@@ -110,12 +125,12 @@ const NewHabbitWrapper = styled.article`
   margin-bottom: 20px;
   margin-top: 20px;
 
-  [type="text"]{
+  [type="text"] {
     width: 100%;
     color: #666666;
   }
 
-  [type="submit"]{
+  [type="submit"] {
     font-size: 16px;
     line-height: 20px;
     padding: 7px 17px;

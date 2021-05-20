@@ -1,21 +1,21 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-export default function Input(props){
-  const {type,placeholder,state,setState} = props;
-  const {className, onClick, required, disabled} = props;
+export default function Input(props) {
+  const { type, placeholder, state, setState } = props;
+  const { className, onClick, required, disabled } = props;
 
   return (
-    <InputWrapper 
+    <InputWrapper
       className={className}
-      onClick={typeof(onClick)==="function" ? onClick : (()=>undefined)}
+      onClick={typeof onClick === "function" ? onClick : () => undefined}
       type={type}
       placeholder={placeholder}
       value={state}
       required={!!required}
-      onChange={(e)=>setState(e.target.value)}
+      onChange={(e) => setState(e.target.value)}
       disabled={!!disabled}
     />
-  )
+  );
 }
 
 const InputWrapper = styled.input`
@@ -26,11 +26,11 @@ const InputWrapper = styled.input`
   padding-left: 10px;
   padding-right: 10px;
 
-  &:disabled{
+  &:disabled {
     background-color: #f2f2f2;
   }
 
-  &::placeholder{
+  &::placeholder {
     color: #dbdbdb;
   }
 `;

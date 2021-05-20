@@ -1,48 +1,56 @@
-import { CircularProgressbar , buildStyles} from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
-import styled from 'styled-components';
-import UserContext from '../contexts/UserContext';
-import {useContext, useEffect, useState} from 'react';
-import axios from 'axios';
-import { useHistory } from 'react-router-dom';
-import percentage from '../functions/percentage';
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import styled from "styled-components";
+import UserContext from "../contexts/UserContext";
+import { useContext, useEffect, useState } from "react";
+import axios from "axios";
+import { useHistory } from "react-router-dom";
+import percentage from "../functions/percentage";
 
-export default function Menu(){
-  const {userState} = useContext(UserContext);
+export default function Menu() {
+  const { userState } = useContext(UserContext);
   const [todaysHabits, setTodaysHabits] = useState([]);
-
   const history = useHistory();
 
-  useEffect(()=>{
-    if(
-      typeof(userState) !== "object"
-      || !userState.hasOwnProperty("token")
-    ) return;
+  useEffect(() => {
+    if (typeof userState !== "object" || !userState.hasOwnProperty("token"))
+      return;
 
-    const url = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today";
+    const url =
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today";
     const config = {
       headers: {
-        Authorization: `Bearer ${userState.token}`
-      }
-    }
+        Authorization: `Bearer ${userState.token}`,
+      },
+    };
     axios
       .get(url, config)
-      .then(({data})=>{
+      .then(({ data }) => {
         setTodaysHabits(data);
       })
-      .catch(()=>{
-        console.log('menu.js')
-        alert('Deu ruim');
+      .catch(() => {
+        console.log("menu.js");
+        alert("Deu ruim");
       });
-  },[userState]);
+  }, [userState]);
 
   return (
     <MenuWrapper>
-      <MenuText onClick={()=>history.push("/habitos")} className="cursor-pointer text-align-right">Hábitos</MenuText>
-      <MenuText onClick={()=>history.push("/historico")} className="cursor-pointer text-align-left">Histórico</MenuText>
-      <ProgressBarContainer onClick={()=>history.push("/hoje")}>
-        <CircularProgressbar 
-          value={percentage(todaysHabits, "done")} 
+      <MenuText
+        onClick={() => history.push("/habitos")}
+        className="cursor-pointer text-align-right"
+      >
+        Hábitos
+      </MenuText>
+      <MenuText
+        onClick={() => history.push("/historico")}
+        className="cursor-pointer text-align-left"
+      >
+        Histórico
+      </MenuText>
+      <ProgressBarContainer onClick={() => history.push("/hoje")}>
+        <CircularProgressbar
+          value={percentage(todaysHabits, "done")}
           text={"Hoje"}
           background
           backgroundPadding={6}
@@ -50,7 +58,7 @@ export default function Menu(){
             textColor: "white",
             pathColor: "white",
             trailColor: "var(--light-blue)",
-            backgroundColor: "var(--light-blue)"
+            backgroundColor: "var(--light-blue)",
           })}
         />
       </ProgressBarContainer>
@@ -70,10 +78,10 @@ const MenuWrapper = styled.footer`
   font-size: 18px;
   padding: 22px 0;
   z-index: 100;
-  @media (min-width:320px){
+  @media (min-width: 320px) {
     padding: 22px 10px;
   }
-  @media (min-width:400px){
+  @media (min-width: 400px) {
     padding: 22px 36px;
   }
 `;

@@ -1,20 +1,19 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-export default function Submit(props){
-  const {text} = props;
-  const {className, onClick, disabled, style} = props;
+export default function Submit(props) {
+  const { text, className, onClick, disabled, style } = props;
 
   return (
-    <ButtonWrapper 
+    <ButtonWrapper
       style={style}
       disabled={disabled}
       className={className}
-      onClick={typeof(onClick) === "function" ? onClick : (()=>undefined)}
+      onClick={typeof onClick === "function" ? onClick : () => undefined}
       type="submit"
     >
       {text}
     </ButtonWrapper>
-  )
+  );
 }
 
 const ButtonWrapper = styled.button`
@@ -27,5 +26,5 @@ const ButtonWrapper = styled.button`
   color: white;
   background-color: var(--light-blue);
   cursor: pointer;
-  opacity: ${(props)=>props.disabled?0.7:1}
+  opacity: ${(props) => (props.disabled ? 0.7 : 1)};
 `;

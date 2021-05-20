@@ -1,7 +1,7 @@
-import styled from 'styled-components';
-import logout from '../functions/logout';
+import styled from "styled-components";
+import logout from "../functions/logout";
 
-export default function Nav(props){
+export default function Nav(props) {
   return (
     <Navbar onClick={logout} isShowing={props.isShowing}>
       <p>LogOut</p>
@@ -10,9 +10,9 @@ export default function Nav(props){
 }
 
 const Navbar = styled.nav`
-  display: ${({isShowing})=>isShowing?"flex":"none"};
+  display: ${({ isShowing }) => (isShowing ? "flex" : "none")};
   height: 30px;
-  box-shadow: 0 0 4px 4px rgba(0,0,0,0.3);
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
   position: absolute;
   background-color: white;
   border-radius: 10px;
@@ -22,7 +22,7 @@ const Navbar = styled.nav`
   top: 14px;
   font-size: 14px;
   align-items: center;
-  &:hover{
+  &:hover {
     color: red;
   }
 `;

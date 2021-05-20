@@ -1,15 +1,15 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-const CheckBox = styled.input.attrs(props=>({
-  type:"checkbox",
-  name:props.name,
+const CheckBox = styled.input.attrs((props) => ({
+  type: "checkbox",
+  name: props.name,
   required: !!props.required,
   checked: props.state[props.index],
   disabled: props.disabled,
-  onChange: (() => {
+  onChange: () => {
     props.state[props.index] = !props.state[props.index];
     props.setState([...props.state]);
-  })
+  },
 }))`
   -webkit-appearance: none;
   margin: 0;
@@ -23,15 +23,15 @@ const CheckBox = styled.input.attrs(props=>({
   line-height: 25px;
   cursor: pointer;
 
-  &::before{
-    content: ${props=>`"${props.char}"`};
+  &::before {
+    content: ${(props) => `"${props.char}"`};
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
   }
 
-  &:checked{
+  &:checked {
     color: white;
     background-color: #cfcfcf;
     border: none;

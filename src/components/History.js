@@ -1,49 +1,46 @@
-import Header from './Header';
-import Menu from './Menu';
-import styled from 'styled-components';
-import UserContext from '../contexts/UserContext';
-import {useContext, useState} from 'react';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
-var dayjs = require('dayjs');
+import Header from "./Header";
+import Menu from "./Menu";
+import styled from "styled-components";
+import UserContext from "../contexts/UserContext";
+import { useContext, useState } from "react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+var dayjs = require("dayjs");
 
-
-export default function History(){
-  const {userState} = useContext(UserContext);
+export default function History() {
+  const { userState } = useContext(UserContext);
 
   const [date, setDate] = useState(dayjs());
 
-  if(localStorage.getItem("user") === null){
-    window.location.href="/";
+  if (localStorage.getItem("user") === null) {
+    window.location.href = "/";
     return "";
   }
-  
+
   return (
     <>
       <Header />
       <MainWrapper>
         <h2>Histórico</h2>
-        <Calendar 
+        <Calendar
           locale="pt-BR"
-          formatDay={(locale, date) => (formatDate(date, 'd'))}
+          formatDay={(locale, date) => formatDate(date, "d")}
         />
       </MainWrapper>
-      <Menu /> 
+      <Menu />
     </>
-  )
+  );
 }
 
-function formatDate(date, type){
+function formatDate(date, type) {
   const dayjsDate = dayjs(date);
   const day = dayjsDate.date();
 
   //perfect or missing
-  const habitStatus="perfect";
+  const habitStatus = "perfect";
   return (
-    <CalendarDay className={day===21?habitStatus:""}>
-      {day}
-    </CalendarDay>
-  )
+    <CalendarDay className={day === 21 ? habitStatus : ""}>{day}</CalendarDay>
+  );
 }
 
 const CalendarDay = styled.div`
@@ -53,24 +50,23 @@ const CalendarDay = styled.div`
   justify-content: center;
   align-items: center;
 
-  &.perfect{
+  &.perfect {
     background-color: var(--light-green);
     border-radius: 50%;
   }
 
-  &.missing{
+  &.missing {
     background-color: #ea5766;
     border-radius: 50%;
   }
 `;
-
 
 const MainWrapper = styled.main`
   background-color: var(--light-grey);
   padding: 80px 18px 115px 18px;
   min-height: 100vh;
 
-  .react-calendar{
+  .react-calendar {
     border-radius: 5px;
     border: none;
   }

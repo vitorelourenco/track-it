@@ -2,19 +2,17 @@ import CheckBox from "./CheckBox";
 import styled from "styled-components";
 import { TrashOutline } from "react-ionicons";
 import UserContext from "../contexts/UserContext";
-import { useContext, useState , useEffect} from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
-import LoadingCover from './LoadingCover';
+import LoadingCover from "./LoadingCover";
 
 export default function Habit(props) {
-  const { weekDays, checkBoxRowState, habitName, id, habits } = props;
-
+  const { weekDays, checkBoxRowState, habitName, id } = props;
   const { userState, setUserState } = useContext(UserContext);
-
   const [isInteractive, setIsInteractive] = useState(true);
 
   function deleteTask() {
-    if (!window.confirm(`Deseja deletar o hábito \n ${habitName}`)) return; 
+    if (!window.confirm(`Deseja deletar o hábito \n ${habitName}`)) return;
     setIsInteractive(false);
     const url = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`;
     const config = {
@@ -25,18 +23,18 @@ export default function Habit(props) {
     axios
       .delete(url, config)
       .then(() => {
-        setUserState({...userState})
+        setUserState({ ...userState });
       })
       .catch(() => {
         setIsInteractive(true);
-        console.log('habit.js');
+        console.log("habit.js");
         alert("Deu ruim");
       });
   }
 
   return (
     <HabbitWrapper>
-      <LoadingCover isInteractive={isInteractive} rgba="rgba(255,120,0,0.5)"/>
+      <LoadingCover isInteractive={isInteractive} rgba="rgba(255,120,0,0.5)" />
       <TrashWrapper onClick={deleteTask}>
         <TrashOutline />
       </TrashWrapper>
