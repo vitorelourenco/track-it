@@ -9,30 +9,8 @@ import percentage from "../functions/percentage";
 import TodaysContext from "../contexts/TodaysContext";
 
 export default function Menu() {
-  const { userState } = useContext(UserContext);
-  const { todaysHabits, setTodaysHabits } = useContext(TodaysContext);
+  const { todaysHabits } = useContext(TodaysContext);
   const history = useHistory();
-
-  useEffect(() => {
-    if (typeof userState !== "object" || !userState.hasOwnProperty("token"))
-      return;
-
-    const url =
-      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today";
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userState.token}`,
-      },
-    };
-    axios
-      .get(url, config)
-      .then(({ data }) => {
-        setTodaysHabits(data);
-      })
-      .catch(() => {
-        alert("Erro na requisicao de habitos do dia");
-      });
-  }, [userState]);
 
   return (
     <MenuWrapper>
