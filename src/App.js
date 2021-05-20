@@ -13,7 +13,7 @@ import {Switch} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import UserContext from './contexts/UserContext';
 import NavContext from './contexts/NavContext';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useLocation} from 'react-router-dom';
 
 
 function App() {
@@ -22,12 +22,16 @@ function App() {
   const [navState, setNavState] = useState(false);
 
   const history = useHistory();
+  const location = useLocation();
 
   useEffect(()=>{
     const localUser = localStorage.getItem("user");
+    const pathName = location.pathname;
     if (localUser !== null){
       setUserState(JSON.parse(localUser));
-      history.push("/hoje");
+      if (pathName!=="/hoje" && pathName!=="/historico" && pathName!=="/habitos"){
+        history.push("/hoje");
+      }
     }
   },[]);
 
