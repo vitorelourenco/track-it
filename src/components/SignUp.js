@@ -77,7 +77,7 @@ export default function SingUp(){
           disabled={isInteractive?false:true}
         />
         <SubmitButton 
-          text={isInteractive?"Cadastrar":<ThreeDots />}
+          text={isInteractive?"Cadastrar":<ThreeDots iconHeight="10px" iconWidth="100px"/>}
           disabled={isInteractive?false:true}
         />
       </form>

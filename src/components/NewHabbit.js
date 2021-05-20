@@ -91,8 +91,9 @@ export default function NewHabit(props){
         <ButtonBox>
           <CancelButton disabled={!isInteractive} onClick={cancel} text="Cancelar"/>
           <SubmitButton 
+            style={{width: "80px"}}
             disabled={!isInteractive} 
-            text={!isInteractive?<ThreeDots />:"Salvar"}
+            text={!isInteractive?<ThreeDots iconHeight="10px" iconWidth="30px"/>:"Salvar"}
           />
         </ButtonBox>
       </form>

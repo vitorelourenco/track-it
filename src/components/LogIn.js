@@ -64,7 +64,7 @@ export default function LogIn(){
           disabled={isInteractive?false:true}
         />
         <SubmitButton
-          text={isInteractive?"Entrar":<ThreeDots />}
+          text={isInteractive?"Entrar":<ThreeDots iconHeight="10px" iconWidth="100px"/>}
           disabled={isInteractive?false:true}
         />
       </form>

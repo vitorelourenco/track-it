@@ -12,6 +12,8 @@ import UserContext from '../contexts/UserContext';
 import {useContext} from 'react';
 import axios from 'axios';
 
+import { useHistory } from 'react-router-dom';
+
 export default function Habits(){
 
   const weekDays = [
@@ -52,6 +54,8 @@ export default function Habits(){
         alert('Deu ruim');
       });
   },[userState]);
+
+
 
   return (
     <>

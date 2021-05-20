@@ -4,7 +4,7 @@ import ThreeDots from './ThreeDots';
 export default function LoadingCover(props){
   return (
     <CoverWrapper isInteractive={props.isInteractive} rgba={props.rgba}>
-      <ThreeDots />
+      <ThreeDots iconHeight="10px" iconWidth="100px"/>
     </CoverWrapper>
   );
 }
@@ -18,6 +18,7 @@ const CoverWrapper = styled.div`
   right: 0;
   bottom: 0;
   background-color: ${props=>props.rgba};
+  z-index: 999;
 
   & > *{
     position: absolute;

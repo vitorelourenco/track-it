@@ -2,10 +2,11 @@ import styled from 'styled-components';
 
 export default function Submit(props){
   const {text} = props;
-  const {className, onClick, disabled} = props;
+  const {className, onClick, disabled, style} = props;
 
   return (
     <ButtonWrapper 
+      style={style}
       disabled={disabled}
       className={className}
       onClick={typeof(onClick) === "function" ? onClick : (()=>undefined)}
