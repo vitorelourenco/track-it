@@ -43,64 +43,39 @@ function App() {
   },[]); // eslint-disable-line react-hooks/exhaustive-deps
 
   //loading data ahead of time for a better user experience
-  //load all habits if valid user is logged in
   useEffect(() => {
     if (typeof userState !== "object" || !userState.hasOwnProperty("token"))
       return;
 
-    const url =
-      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
     const config = {
       headers: {
         Authorization: `Bearer ${userState.token}`,
       },
     };
+
+    //load all habits if valid user is logged in
     axios
-      .get(url, config)
+      .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config)
       .then(({ data }) => {
         setHabits(data);
       })
       .catch(() => {
         alert("Erro na requisicao de habitos");
       });
-  }, [userState]);
 
-  //load todays habits if valid user is logged in
-  useEffect(() => {
-    if (typeof userState !== "object" || !userState.hasOwnProperty("token"))
-      return;
-
-    const url =
-      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today";
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userState.token}`,
-      },
-    };
+    //load todays habits if valid user is logged in
     axios
-      .get(url, config)
+      .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config)
       .then(({ data }) => {
         setTodaysHabits(data);
       })
       .catch(() => {
         alert("Erro ao buscar habitos diarios");
       });
-  }, [userState]);
 
-  //load user history if valid user is logged in
-  useEffect(() => {
-    if (typeof userState !== "object" || !userState.hasOwnProperty("token"))
-      return;
-
-    const url =
-      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily";
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userState.token}`,
-      },
-    };
+    //load user history if valid user is logged in
     axios
-      .get(url, config)
+      .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily", config)
       .then(({ data }) => {
         setUserHistory(data);
       })
