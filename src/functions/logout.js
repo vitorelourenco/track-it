@@ -1,4 +1,4 @@
-export default function logout(){
+export default function logout() {
   localStorage.clear();
-  document.location.href="/";
+  document.location.href = "/";
 }

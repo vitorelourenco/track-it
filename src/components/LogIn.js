@@ -7,12 +7,12 @@ import axios from "axios";
 import { Link, useHistory } from "react-router-dom";
 import { useState, useContext } from "react";
 import UserContext from "../contexts/UserContext";
-import loadUserData from '../functions/loadUserData';
-import TodaysContext from '../contexts/TodaysContext';
-import HistoryContext from '../contexts/HistoryContext';
-import HabitsContext from '../contexts/HabitsContext';
+import loadUserData from "../functions/loadUserData";
+import TodaysContext from "../contexts/TodaysContext";
+import HistoryContext from "../contexts/HistoryContext";
+import HabitsContext from "../contexts/HabitsContext";
 
-export default function LogIn({setIsLoading}) {
+export default function LogIn({ setIsLoading }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -39,19 +39,23 @@ export default function LogIn({setIsLoading}) {
         setUserState(data);
         setIsLoading(false);
 
-        const promisseUserData = loadUserData({userState:data, setHabits, setTodaysHabits, setUserHistory});
+        const promisseUserData = loadUserData({
+          userState: data,
+          setHabits,
+          setTodaysHabits,
+          setUserHistory,
+        });
 
-        promisseUserData.then(()=>{
+        promisseUserData.then(() => {
           history.push({
             pathname: "/hoje",
           });
         });
 
-        promisseUserData.catch(()=>{
+        promisseUserData.catch(() => {
           localStorage.clear();
-          document.location.href="/";
+          document.location.href = "/";
         });
-
       })
       .catch(() => {
         setIsInteractive(true);

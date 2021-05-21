@@ -8,7 +8,7 @@ import LoadingCover from "./LoadingCover";
 import TodaysContext from "../contexts/TodaysContext";
 import HabitsContext from "../contexts/HabitsContext";
 import HistoryContext from "../contexts/HistoryContext";
-import loadUserData from '../functions/loadUserData';
+import loadUserData from "../functions/loadUserData";
 
 export default function Habit(props) {
   const { weekDays, checkBoxRowState, habitName, id } = props;
@@ -34,11 +34,15 @@ export default function Habit(props) {
         config
       )
       .then(() => {
-        loadUserData({userState, setHabits, setTodaysHabits, setUserHistory})
-          .catch(()=>{
-            localStorage.clear();
-            document.location.href="/";
-          })
+        loadUserData({
+          userState,
+          setHabits,
+          setTodaysHabits,
+          setUserHistory,
+        }).catch(() => {
+          localStorage.clear();
+          document.location.href = "/";
+        });
       })
       .catch(() => {
         setIsInteractive(true);

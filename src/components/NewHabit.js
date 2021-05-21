@@ -11,7 +11,7 @@ import ThreeDots from "./ThreeDots";
 import TodaysContext from "../contexts/TodaysContext";
 import HabitsContext from "../contexts/HabitsContext";
 import HistoryContext from "../contexts/HistoryContext";
-import loadUserData from '../functions/loadUserData';
+import loadUserData from "../functions/loadUserData";
 
 export default function NewHabit(props) {
   function cancel(e) {
@@ -36,22 +36,29 @@ export default function NewHabit(props) {
     setIsInteractive(false);
     //posting new habit
     axios
-      .post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", body, config)
+      .post(
+        "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
+        body,
+        config
+      )
       .then(() => {
-
-        const callBackSetHabits = () =>{
+        const callBackSetHabits = () => {
           setIsInteractive(true);
           setHabitName("");
           setCheckBoxRowState([...checkBoxRowState].fill(false));
           setMakingNewHabit(false);
-        }
+        };
 
-        loadUserData({userState, setHabits, setTodaysHabits, setUserHistory, callBackSetHabits})
-          .catch(()=>{
-            localStorage.clear();
-            document.location.href="/";
-          });
-
+        loadUserData({
+          userState,
+          setHabits,
+          setTodaysHabits,
+          setUserHistory,
+          callBackSetHabits,
+        }).catch(() => {
+          localStorage.clear();
+          document.location.href = "/";
+        });
       })
       .catch(() => {
         alert("Erro ao adicionar um novo habito");
