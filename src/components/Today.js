@@ -74,6 +74,7 @@ export default function Today() {
         </h2>
         <p>
           {(() => {
+            if(todaysHabits.length === 0) return <em>Você não tem hábitos para hoje</em>;
             const percent = percentage(todaysHabits, "done");
             if (percent === 0) return "Nenhum hábito concluído ainda";
             return <em>{percent}% dos hábitos concluídos</em>;
