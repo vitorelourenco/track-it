@@ -97,6 +97,11 @@ const HabbitWrapper = styled.article`
   margin-top: 20px;
   position: relative;
 
+  & > span {
+    margin-right: 40px;
+    display: inline-block;
+  }
+
   [type="checkbox"] {
     cursor: auto;
   }

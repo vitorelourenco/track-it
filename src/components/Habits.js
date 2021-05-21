@@ -9,6 +9,7 @@ import UserContext from "../contexts/UserContext";
 import { useContext } from "react";
 import axios from "axios";
 import HabitsContext from '../contexts/HabitsContext';
+import TodaysContext from '../contexts/TodaysContext';
 
 export default function Habits() {
   const [checkBoxRowState, setCheckBoxRowState] = useState(
@@ -18,11 +19,35 @@ export default function Habits() {
   const [makingNewHabit, setMakingNewHabit] = useState(false);
   const { userState } = useContext(UserContext);
   const {habits, setHabits} = useContext(HabitsContext);
+  const {setTodaysHabits} = useContext(TodaysContext);
 
-    if (localStorage.getItem("user") === null) {
+  //load all habits if valid user is logged in
+  useEffect(() => {
+    if (typeof userState !== "object" || !userState.hasOwnProperty("token"))
+      return;
+
+    const url =
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userState.token}`,
+      },
+    };
+    axios
+      .get(url, config)
+      .then(({ data }) => {
+        setHabits(data);
+      })
+      .catch(() => {
+        alert("Erro na requisicao de habitos");
+      });
+  }, []);
+
+  if (localStorage.getItem("user") === null) {
     window.location.href = "/";
     return "";
   }
+
 
   return (
     <>

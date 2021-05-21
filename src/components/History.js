@@ -27,6 +27,28 @@ export default function History() {
     return (acc);
   },{});
 
+  //load user history if valid user is logged in
+  useEffect(() => {
+    if (typeof userState !== "object" || !userState.hasOwnProperty("token"))
+      return;
+
+    const url =
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily";
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userState.token}`,
+      },
+    };
+    axios
+      .get(url, config)
+      .then(({ data }) => {
+        setUserHistory(data);
+      })
+      .catch(() => {
+        alert("Erro ao buscar dados do historico");
+      });
+  }, []);
+
   if (localStorage.getItem("user") === null) {
     window.location.href = "/";
     return "";
