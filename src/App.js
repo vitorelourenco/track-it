@@ -15,6 +15,7 @@ import UserContext from './contexts/UserContext';
 import NavContext from './contexts/NavContext';
 import {useHistory, useLocation} from 'react-router-dom';
 import TodaysContext from './contexts/TodaysContext';
+import HabitsContext from './contexts/HabitsContext';
 
 function App() {
 
@@ -40,28 +41,30 @@ function App() {
   return (
     <UserContext.Provider value={{userState, setUserState}}>
       <TodaysContext.Provider value={{todaysHabits, setTodaysHabits}}>
-        <NavContext.Provider value={{navState, setNavState}}>
-          <GlobalStylesReset />
-          <GlobalStylesVEL />
-          <GlobalStylesTrackIt />
-          <Switch>
-            <Route exact path="/habitos">
-              <Habits habits={habits} setHabits={setHabits} />
-            </Route>
-            <Route exact path="/hoje">
-              <Today />
-            </Route>
-            <Route exact path="/historico">
-              <History />
-            </Route>
-            <Route exact path="/cadastro">
-              <SignUp />
-            </Route>
-            <Route path="/">
-              <LogIn />
-            </Route>
-          </Switch>
-        </NavContext.Provider>
+        <HabitsContext.Provider value={{habits, setHabits}}>
+          <NavContext.Provider value={{navState, setNavState}}>
+            <GlobalStylesReset />
+            <GlobalStylesVEL />
+            <GlobalStylesTrackIt />
+            <Switch>
+              <Route exact path="/habitos">
+                <Habits />
+              </Route>
+              <Route exact path="/hoje">
+                <Today />
+              </Route>
+              <Route exact path="/historico">
+                <History />
+              </Route>
+              <Route exact path="/cadastro">
+                <SignUp />
+              </Route>
+              <Route path="/">
+                <LogIn />
+              </Route>
+            </Switch>
+          </NavContext.Provider>
+        </HabitsContext.Provider>
       </TodaysContext.Provider>
     </UserContext.Provider>
   );

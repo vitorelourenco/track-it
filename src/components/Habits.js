@@ -8,8 +8,9 @@ import Habit from "./Habit";
 import UserContext from "../contexts/UserContext";
 import { useContext } from "react";
 import axios from "axios";
+import HabitsContext from '../contexts/HabitsContext';
 
-export default function Habits({ habits, setHabits }) {
+export default function Habits() {
   const weekDays = [
     { char: "D", id: 0 },
     { char: "S", id: 1 },
@@ -26,6 +27,7 @@ export default function Habits({ habits, setHabits }) {
   const [habitName, setHabitName] = useState("");
   const [makingNewHabit, setMakingNewHabit] = useState(false);
   const { userState } = useContext(UserContext);
+  const {habits, setHabits} = useContext(HabitsContext);
 
   useEffect(() => {
     if (typeof userState !== "object" || !userState.hasOwnProperty("token"))

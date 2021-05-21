@@ -5,30 +5,54 @@ import UserContext from "../contexts/UserContext";
 import { useContext, useState } from "react";
 import axios from "axios";
 import LoadingCover from "./LoadingCover";
+import TodaysContext from '../contexts/TodaysContext';
+import HabitsContext from '../contexts/HabitsContext';
 
 export default function Habit(props) {
   const { weekDays, checkBoxRowState, habitName, id } = props;
   const { userState, setUserState } = useContext(UserContext);
   const [isInteractive, setIsInteractive] = useState(true);
 
+  const {todaysHabits, setTodaysHabits} = useContext(TodaysContext);
+  const {habits, setHabits} = useContext(HabitsContext);
+
+
   function deleteTask() {
     if (!window.confirm(`Deseja deletar o hábito \n ${habitName}`)) return;
     setIsInteractive(false);
-    const url = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`;
     const config = {
       headers: {
         Authorization: `Bearer ${userState.token}`,
       },
     };
+    
     axios
-      .delete(url, config)
-      .then(() => {
-        setUserState({ ...userState });
+    .delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`, config)
+    .then(() => {
+
+      axios
+      .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config)
+      .then(({ data }) => {
+        setTodaysHabits(data);
       })
       .catch(() => {
-        setIsInteractive(true);
-        alert("Erro ao tentar deletar habito");
+        alert("Erro ao buscar habitos diarios");
       });
+
+      axios
+      .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config)
+      .then(({ data }) => {
+        setHabits(data);
+      })
+      .catch(() => {
+        alert("Erro na requisicao de habitos");
+      });
+
+    })
+    .catch(() => {
+      setIsInteractive(true);
+      alert("Erro ao tentar deletar habito");
+    });
   }
 
   return (
