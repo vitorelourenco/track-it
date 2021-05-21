@@ -8,6 +8,8 @@ import axios from "axios";
 import UserContext from "../contexts/UserContext";
 import { useContext } from "react";
 import ThreeDots from "./ThreeDots";
+import TodaysContext from "../contexts/TodaysContext";
+import HabitsContext from '../contexts/HabitsContext';
 
 export default function NewHabit(props) {
   function cancel(e) {
@@ -32,14 +34,36 @@ export default function NewHabit(props) {
 
     setIsInteractive(false);
     axios
-      .post(url, body, config)
-      .then(() => {
-        setUserState({ ...userState });
+    .post(url, body, config)
+    .then(() => {
+
+      axios
+      .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config)
+      .then(({ data }) => {
+        setTodaysHabits(data);
       })
       .catch(() => {
-        alert("Erro ao adicionar um novo habito");
-        setIsInteractive(true);
+        alert("Erro ao buscar habitos diarios");
       });
+
+      axios
+      .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config)
+      .then(({ data }) => {
+        setHabits(data);
+        setIsInteractive(true);
+        setHabitName("");
+        setCheckBoxRowState([...checkBoxRowState].fill(false));
+        setMakingNewHabit(false);
+      })
+      .catch(() => {
+        alert("Erro na requisicao de habitos");
+      });
+
+    })
+    .catch(() => {
+      alert("Erro ao adicionar um novo habito");
+      setIsInteractive(true);
+    });
   }
 
   const {
@@ -59,14 +83,8 @@ export default function NewHabit(props) {
     false
   );
 
-  useEffect(() => {
-    if (!makingNewHabit && !isInteractive) {
-      setIsInteractive(true);
-      setHabitName("");
-      setCheckBoxRowState([...checkBoxRowState].fill(false));
-      setMakingNewHabit(false);
-    }
-  }, [makingNewHabit]);
+  const {todaysHabits, setTodaysHabits} = useContext(TodaysContext);
+  const {habits, setHabits} = useContext(HabitsContext);
 
   return (
     <NewHabbitWrapper className={className}>
