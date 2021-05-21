@@ -11,6 +11,7 @@ import ThreeDots from "./ThreeDots";
 import TodaysContext from "../contexts/TodaysContext";
 import HabitsContext from "../contexts/HabitsContext";
 import HistoryContext from "../contexts/HistoryContext";
+import loadUserData from '../functions/loadUserData';
 
 export default function NewHabit(props) {
   function cancel(e) {
@@ -37,50 +38,16 @@ export default function NewHabit(props) {
     axios
       .post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", body, config)
       .then(() => {
-        //getting and setting todays habits
-        axios
-          .get(
-            "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today",
-            config
-          )
-          .then(({ data }) => {
-            setTodaysHabits(data);
-          })
-          .catch(() => {
-            alert("Erro ao buscar habitos diarios");
-          });
 
-        //getting and setting all habits
-        //this makes sure the NewHabit component will only go away
-        //AFTER the app is ready to render the new habit as a habit.
-        axios
-          .get(
-            "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
-            config
-          )
-          .then(({ data }) => {
-            setHabits(data);
-            setIsInteractive(true);
-            setHabitName("");
-            setCheckBoxRowState([...checkBoxRowState].fill(false));
-            setMakingNewHabit(false);
-          })
-          .catch(() => {
-            alert("Erro na requisicao de habitos");
-          });
+        const callBackSetHabits = () =>{
+          setIsInteractive(true);
+          setHabitName("");
+          setCheckBoxRowState([...checkBoxRowState].fill(false));
+          setMakingNewHabit(false);
+        }
 
-        //getting and setting history
-        axios
-          .get(
-            "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily",
-            config
-          )
-          .then(({ data }) => {
-            setUserHistory(data);
-          })
-          .catch(() => {
-            alert("Erro ao buscar dados do historico");
-          });
+        loadUserData({userState, setHabits, setTodaysHabits, setUserHistory, callBackSetHabits});
+
       })
       .catch(() => {
         alert("Erro ao adicionar um novo habito");

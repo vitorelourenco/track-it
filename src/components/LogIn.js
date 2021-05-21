@@ -7,8 +7,12 @@ import axios from "axios";
 import { Link, useHistory } from "react-router-dom";
 import { useState, useContext } from "react";
 import UserContext from "../contexts/UserContext";
+import loadUserData from '../functions/loadUserData';
+import TodaysContext from '../contexts/TodaysContext';
+import HistoryContext from '../contexts/HistoryContext';
+import HabitsContext from '../contexts/HabitsContext';
 
-export default function LogIn() {
+export default function LogIn({setIsLoading}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -17,6 +21,10 @@ export default function LogIn() {
   const history = useHistory();
 
   const { setUserState } = useContext(UserContext);
+
+  const { setUserHistory } = useContext(HistoryContext);
+  const { setTodaysHabits } = useContext(TodaysContext);
+  const { setHabits } = useContext(HabitsContext);
 
   function submit(e) {
     e.preventDefault();
@@ -28,11 +36,17 @@ export default function LogIn() {
       .post(url, body)
       .then(({ data }) => {
         localStorage.setItem("user", JSON.stringify(data));
-        setIsInteractive(true);
-        setUserState({ ...data });
-        history.push({
-          pathname: "/hoje",
+        setUserState(data);
+        setIsLoading(false);
+
+        const promisseUserData = loadUserData({userState:data, setHabits, setTodaysHabits, setUserHistory});
+
+        promisseUserData.then(()=>{
+          history.push({
+            pathname: "/hoje",
+          });
         });
+
       })
       .catch((err) => {
         setIsInteractive(true);

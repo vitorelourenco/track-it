@@ -8,6 +8,7 @@ import LoadingCover from "./LoadingCover";
 import TodaysContext from "../contexts/TodaysContext";
 import HabitsContext from "../contexts/HabitsContext";
 import HistoryContext from "../contexts/HistoryContext";
+import loadUserData from '../functions/loadUserData';
 
 export default function Habit(props) {
   const { weekDays, checkBoxRowState, habitName, id } = props;
@@ -33,44 +34,7 @@ export default function Habit(props) {
         config
       )
       .then(() => {
-        //getting and setting todays habits
-        axios
-          .get(
-            "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today",
-            config
-          )
-          .then(({ data }) => {
-            setTodaysHabits(data);
-          })
-          .catch(() => {
-            alert("Erro ao buscar habitos diarios");
-          });
-
-        //getting and setting all habits
-        axios
-          .get(
-            "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
-            config
-          )
-          .then(({ data }) => {
-            setHabits(data);
-          })
-          .catch(() => {
-            alert("Erro na requisicao de habitos");
-          });
-
-        //getting and setting history
-        axios
-          .get(
-            "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily",
-            config
-          )
-          .then(({ data }) => {
-            setUserHistory(data);
-          })
-          .catch(() => {
-            alert("Erro ao buscar dados do historico");
-          });
+        loadUserData({userState, setHabits, setTodaysHabits, setUserHistory});
       })
       .catch(() => {
         setIsInteractive(true);
