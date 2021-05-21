@@ -7,34 +7,18 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import axios from 'axios';
 import HistoryHabitCard from './HistoryHabitsCard';
+import HistoryContext from '../contexts/HistoryContext';
+import HabitsContext from '../contexts/HabitsContext';
+import TodaysContext from '../contexts/TodaysContext';
 var dayjs = require("dayjs");
 
 export default function History() {
   const { userState } = useContext(UserContext);
 
-  const [userHistory, setUserHistory] = useState([]);
+  const { dailyHabits } = useContext(TodaysContext);
+  const { habits } = useContext(HabitsContext);
+  const { userHistory, setUserHistory } = useContext(HistoryContext);
   const [onShow, setOnShow] = useState(undefined)
-
-  useEffect(() => {
-    if (typeof userState !== "object" || !userState.hasOwnProperty("token"))
-      return;
-
-    const url =
-      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily";
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userState.token}`,
-      },
-    };
-    axios
-      .get(url, config)
-      .then(({ data }) => {
-        setUserHistory(data);
-      })
-      .catch(() => {
-        alert("Erro ao buscar dados do historico");
-      });
-  }, [userState]);
 
   const historyAnalisys = userHistory.reduce((acc,{day, habits})=>{
     const doneCount = habits.reduce((acc,elem)=>elem.done?acc+1:acc,0);

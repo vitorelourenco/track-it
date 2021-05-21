@@ -5,12 +5,14 @@ import { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import LoadingCover from "./LoadingCover";
 import TodaysContext from '../contexts/TodaysContext';
+import HistoryContext from '../contexts/HistoryContext';
 
 export default function DailyHabitCard(props) {
   const { habitId, name, currentSequence, highestSequence, done } = props;
   const { userState, setUserState } = useContext(UserContext);
   const [isInteractive, setIsInteractive] = useState(true);
   const {todaysHabits, setTodaysHabits} = useContext(TodaysContext);
+  const {userHistory, setUserHistory} = useContext(HistoryContext);
 
   function toggleCard() {
     setIsInteractive(false);
@@ -30,7 +32,18 @@ export default function DailyHabitCard(props) {
       .then(({ data }) => {
         setTodaysHabits(data);
         setIsInteractive(true);
-      })
+
+        //updating history
+        axios
+        .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily", config)
+        .then(({ data }) => {
+          setUserHistory(data);
+        })
+        .catch(() => {
+          alert("Erro ao buscar dados do historico");
+        });
+        })
+
       .catch(() => {
         alert("Erro ao buscar habitos diarios");
       });

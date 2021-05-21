@@ -38,27 +38,6 @@ export default function Today() {
   const monthday = now.date();
   const month = now.month() + 1;
 
-  useEffect(() => {
-    if (typeof userState !== "object" || !userState.hasOwnProperty("token"))
-      return;
-
-    const url =
-      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today";
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userState.token}`,
-      },
-    };
-    axios
-      .get(url, config)
-      .then(({ data }) => {
-        setTodaysHabits(data);
-      })
-      .catch(() => {
-        alert("Erro ao buscar habitos diarios");
-      });
-  }, [userState]);
-
   if (localStorage.getItem("user") === null) {
     window.location.href = "/";
     return "";

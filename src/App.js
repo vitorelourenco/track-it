@@ -2,6 +2,7 @@ import './App.css';
 import GlobalStylesReset from './global_styles/GlobalStylesReset';
 import GlobalStylesVEL from './global_styles/GlobalStylesVEL';
 import GlobalStylesTrackIt from './global_styles/GlobalStylesTrackIt';
+import axios from 'axios';
 
 import Habits from './components/Habits';
 import Today from './components/Today';
@@ -16,6 +17,7 @@ import NavContext from './contexts/NavContext';
 import {useHistory, useLocation} from 'react-router-dom';
 import TodaysContext from './contexts/TodaysContext';
 import HabitsContext from './contexts/HabitsContext';
+import HistoryContext from './contexts/HistoryContext';
 
 function App() {
 
@@ -23,10 +25,12 @@ function App() {
   const [navState, setNavState] = useState(false);
   const [todaysHabits, setTodaysHabits] = useState([]);
   const [habits, setHabits] = useState([]);
+  const [userHistory, setUserHistory] = useState([]);
 
   const history = useHistory();
   const location = useLocation();
 
+  //load user from local storage
   useEffect(()=>{
     const localUser = localStorage.getItem("user");
     const pathName = location.pathname;
@@ -38,32 +42,100 @@ function App() {
     }
   },[]);
 
+  //load all habits if valid user is logged in
+  useEffect(() => {
+    if (typeof userState !== "object" || !userState.hasOwnProperty("token"))
+      return;
+
+    const url =
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userState.token}`,
+      },
+    };
+    axios
+      .get(url, config)
+      .then(({ data }) => {
+        setHabits(data);
+      })
+      .catch(() => {
+        alert("Erro na requisicao de habitos");
+      });
+  }, [userState]);
+
+  //load todays habits if valid user is logged in
+  useEffect(() => {
+    if (typeof userState !== "object" || !userState.hasOwnProperty("token"))
+      return;
+
+    const url =
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today";
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userState.token}`,
+      },
+    };
+    axios
+      .get(url, config)
+      .then(({ data }) => {
+        setTodaysHabits(data);
+      })
+      .catch(() => {
+        alert("Erro ao buscar habitos diarios");
+      });
+  }, [userState]);
+
+  //load user history if valid user is logged in
+  useEffect(() => {
+    if (typeof userState !== "object" || !userState.hasOwnProperty("token"))
+      return;
+
+    const url =
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily";
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userState.token}`,
+      },
+    };
+    axios
+      .get(url, config)
+      .then(({ data }) => {
+        setUserHistory(data);
+      })
+      .catch(() => {
+        alert("Erro ao buscar dados do historico");
+      });
+  }, [userState]);
+
   return (
     <UserContext.Provider value={{userState, setUserState}}>
       <TodaysContext.Provider value={{todaysHabits, setTodaysHabits}}>
         <HabitsContext.Provider value={{habits, setHabits}}>
-          <NavContext.Provider value={{navState, setNavState}}>
-            <GlobalStylesReset />
-            <GlobalStylesVEL />
-            <GlobalStylesTrackIt />
-            <Switch>
-              <Route exact path="/habitos">
-                <Habits />
-              </Route>
-              <Route exact path="/hoje">
-                <Today />
-              </Route>
-              <Route exact path="/historico">
-                <History />
-              </Route>
-              <Route exact path="/cadastro">
-                <SignUp />
-              </Route>
-              <Route path="/">
-                <LogIn />
-              </Route>
-            </Switch>
-          </NavContext.Provider>
+          <HistoryContext.Provider value={{userHistory, setUserHistory}}>
+            <NavContext.Provider value={{navState, setNavState}}>
+              <GlobalStylesReset />
+              <GlobalStylesVEL />
+              <GlobalStylesTrackIt />
+              <Switch>
+                <Route exact path="/habitos">
+                  <Habits />
+                </Route>
+                <Route exact path="/hoje">
+                  <Today />
+                </Route>
+                <Route exact path="/historico">
+                  <History />
+                </Route>
+                <Route exact path="/cadastro">
+                  <SignUp />
+                </Route>
+                <Route path="/">
+                  <LogIn />
+                </Route>
+              </Switch>
+            </NavContext.Provider>
+          </HistoryContext.Provider>
         </HabitsContext.Provider>
       </TodaysContext.Provider>
     </UserContext.Provider>

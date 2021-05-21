@@ -10,6 +10,7 @@ import { useContext } from "react";
 import ThreeDots from "./ThreeDots";
 import TodaysContext from "../contexts/TodaysContext";
 import HabitsContext from '../contexts/HabitsContext';
+import HistoryContext from '../contexts/HistoryContext';
 
 export default function NewHabit(props) {
   function cancel(e) {
@@ -36,7 +37,7 @@ export default function NewHabit(props) {
     axios
     .post(url, body, config)
     .then(() => {
-
+      //updating todays habits
       axios
       .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config)
       .then(({ data }) => {
@@ -46,6 +47,7 @@ export default function NewHabit(props) {
         alert("Erro ao buscar habitos diarios");
       });
 
+      //updating all habits
       axios
       .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config)
       .then(({ data }) => {
@@ -57,6 +59,16 @@ export default function NewHabit(props) {
       })
       .catch(() => {
         alert("Erro na requisicao de habitos");
+      });
+
+      //updating history
+      axios
+      .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily", config)
+      .then(({ data }) => {
+        setUserHistory(data);
+      })
+      .catch(() => {
+        alert("Erro ao buscar dados do historico");
       });
 
     })
@@ -76,6 +88,8 @@ export default function NewHabit(props) {
     setHabitName,
     className,
   } = props;
+  
+  const {userHistory, setUserHistory} = useContext(HistoryContext);
   const { userState, setUserState } = useContext(UserContext);
   const [isInteractive, setIsInteractive] = useState(true);
   const dayIsRequired = !checkBoxRowState.reduce(

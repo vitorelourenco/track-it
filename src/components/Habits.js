@@ -11,16 +11,6 @@ import axios from "axios";
 import HabitsContext from '../contexts/HabitsContext';
 
 export default function Habits() {
-  const weekDays = [
-    { char: "D", id: 0 },
-    { char: "S", id: 1 },
-    { char: "T", id: 2 },
-    { char: "Q", id: 3 },
-    { char: "Q", id: 4 },
-    { char: "S", id: 5 },
-    { char: "S", id: 6 },
-  ];
-
   const [checkBoxRowState, setCheckBoxRowState] = useState(
     Array(weekDays.length).fill(false)
   );
@@ -29,29 +19,7 @@ export default function Habits() {
   const { userState } = useContext(UserContext);
   const {habits, setHabits} = useContext(HabitsContext);
 
-  useEffect(() => {
-    if (typeof userState !== "object" || !userState.hasOwnProperty("token"))
-      return;
-
-    const url =
-      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userState.token}`,
-      },
-    };
-    axios
-      .get(url, config)
-      .then(({ data }) => {
-        setHabits(data);
-        setMakingNewHabit(false);
-      })
-      .catch(() => {
-        alert("Erro na requisicao de habitos");
-      });
-  }, [userState]);
-
-  if (localStorage.getItem("user") === null) {
+    if (localStorage.getItem("user") === null) {
     window.location.href = "/";
     return "";
   }
@@ -110,6 +78,16 @@ function NoHabitsParagraph() {
     </p>
   );
 }
+
+const weekDays = [
+  { char: "D", id: 0 },
+  { char: "S", id: 1 },
+  { char: "T", id: 2 },
+  { char: "Q", id: 3 },
+  { char: "Q", id: 4 },
+  { char: "S", id: 5 },
+  { char: "S", id: 6 },
+];
 
 const MainWrapper = styled.main`
   background-color: var(--light-grey);

@@ -7,12 +7,14 @@ import axios from "axios";
 import LoadingCover from "./LoadingCover";
 import TodaysContext from '../contexts/TodaysContext';
 import HabitsContext from '../contexts/HabitsContext';
+import HistoryContext from '../contexts/HistoryContext';
 
 export default function Habit(props) {
   const { weekDays, checkBoxRowState, habitName, id } = props;
   const { userState, setUserState } = useContext(UserContext);
   const [isInteractive, setIsInteractive] = useState(true);
 
+  const {userHistory, setUserHistory} = useContext(HistoryContext);
   const {todaysHabits, setTodaysHabits} = useContext(TodaysContext);
   const {habits, setHabits} = useContext(HabitsContext);
 
@@ -25,11 +27,11 @@ export default function Habit(props) {
         Authorization: `Bearer ${userState.token}`,
       },
     };
-    
+
     axios
     .delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`, config)
     .then(() => {
-
+      //updating todays habits
       axios
       .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config)
       .then(({ data }) => {
@@ -39,6 +41,7 @@ export default function Habit(props) {
         alert("Erro ao buscar habitos diarios");
       });
 
+      //updating all habits
       axios
       .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config)
       .then(({ data }) => {
@@ -48,6 +51,15 @@ export default function Habit(props) {
         alert("Erro na requisicao de habitos");
       });
 
+      //updating history
+      axios
+      .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily", config)
+      .then(({ data }) => {
+        setUserHistory(data);
+      })
+      .catch(() => {
+        alert("Erro ao buscar dados do historico");
+      });
     })
     .catch(() => {
       setIsInteractive(true);
