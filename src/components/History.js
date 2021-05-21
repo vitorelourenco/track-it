@@ -51,14 +51,13 @@ export default function History() {
   function onClickDay(date){
     const dayjsDate = dayjs(date);
     const formatedDate = dayjsDate.format("DD/MM/YYYY");
-    if (!historyAnalisys.hasOwnProperty(formatedDate)) return;
-    if (onShow){
-      console.log(historyAnalisys[onShow].habits);
-    }
+    if (!historyAnalisys.hasOwnProperty(formatedDate)){
+      setOnShow(undefined);
+      return;
+    } 
     onShow === formatedDate ? setOnShow(undefined) : setOnShow(formatedDate);
   }
 
-  console.log(onShow);
   return (
     <>
       <Header />
