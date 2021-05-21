@@ -24,19 +24,24 @@ const CardWrapper = styled.div`
   padding: 13px;
   cursor: pointer;
 
+  section{
+    display: flex;
+    align-items: center;
+  }
+
   h3 {
     font-size: 20px;
     line-height: 25px;
-    margin-bottom: 10px;
   }
 
   .daily-habit-check-box {
-    float: right;
     height: 20px;
     width: 20px;
     background-color: ${(props) =>
       props.done === false ? "#e7e7e7" : "var(--light-green)"};
     border-radius: 5px;
+    margin-right: 10px;
+    flex-shrink: 0;
 
     svg {
       width: 93%;
