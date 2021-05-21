@@ -34,7 +34,11 @@ export default function Habit(props) {
         config
       )
       .then(() => {
-        loadUserData({userState, setHabits, setTodaysHabits, setUserHistory});
+        loadUserData({userState, setHabits, setTodaysHabits, setUserHistory})
+          .catch(()=>{
+            localStorage.clear();
+            document.location.href="/";
+          })
       })
       .catch(() => {
         setIsInteractive(true);

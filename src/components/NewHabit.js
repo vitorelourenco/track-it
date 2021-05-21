@@ -46,7 +46,11 @@ export default function NewHabit(props) {
           setMakingNewHabit(false);
         }
 
-        loadUserData({userState, setHabits, setTodaysHabits, setUserHistory, callBackSetHabits});
+        loadUserData({userState, setHabits, setTodaysHabits, setUserHistory, callBackSetHabits})
+          .catch(()=>{
+            localStorage.clear();
+            document.location.href="/";
+          });
 
       })
       .catch(() => {

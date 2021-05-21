@@ -47,8 +47,13 @@ export default function LogIn({setIsLoading}) {
           });
         });
 
+        promisseUserData.catch(()=>{
+          localStorage.clear();
+          document.location.href="/";
+        });
+
       })
-      .catch((err) => {
+      .catch(() => {
         setIsInteractive(true);
         alert("Requisicao de login recusada");
       });
