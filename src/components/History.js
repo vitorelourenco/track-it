@@ -6,13 +6,14 @@ import { useContext, useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import axios from 'axios';
-import { useHistory } from "react-router";
+import HistoryHabitCard from './HistoryHabitsCard';
 var dayjs = require("dayjs");
 
 export default function History() {
   const { userState } = useContext(UserContext);
 
   const [userHistory, setUserHistory] = useState([]);
+  const [onShow, setOnShow] = useState(undefined)
 
   useEffect(() => {
     if (typeof userState !== "object" || !userState.hasOwnProperty("token"))
@@ -38,7 +39,7 @@ export default function History() {
   const historyAnalisys = userHistory.reduce((acc,{day, habits})=>{
     const doneCount = habits.reduce((acc,elem)=>elem.done?acc+1:acc,0);
     const verdict = doneCount === habits.length? "perfect" : "lacking"; 
-    acc[day]=verdict;
+    acc[day]={verdict, habits};
     return (acc);
   },{});
 
@@ -46,15 +47,35 @@ export default function History() {
     window.location.href = "/";
     return "";
   }
+
+  function onClickDay(date){
+    const dayjsDate = dayjs(date);
+    const formatedDate = dayjsDate.format("DD/MM/YYYY");
+    if (!historyAnalisys.hasOwnProperty(formatedDate)) return;
+    if (onShow){
+      console.log(historyAnalisys[onShow].habits);
+    }
+    onShow === formatedDate ? setOnShow(undefined) : setOnShow(formatedDate);
+  }
+
+  console.log(onShow);
   return (
     <>
       <Header />
       <MainWrapper>
         <h2>Histórico</h2>
-        <Calendar
-          locale="pt-BR"
-          formatDay={(locale, date) => formatDate(date, historyAnalisys)}
-        />
+        <CalendarWrapper>
+          <Calendar onClickDay={onClickDay}
+            locale="pt-BR"
+            formatDay={(locale, date) => formatDate(date, historyAnalisys)}
+          />
+          <FlexContainer>
+            {onShow ? historyAnalisys[onShow].habits.map(({id, name, done})=>{
+              return <HistoryHabitCard key={id} name={name} done={done}/>
+              })
+            : ""}
+          </FlexContainer>
+        </CalendarWrapper>
       </MainWrapper>
       <Menu />
     </>
@@ -66,19 +87,48 @@ function formatDate(date, historyAnalisys) {
   const formatedDate = dayjsDate.format("DD/MM/YYYY");
   const className = 
     historyAnalisys.hasOwnProperty(formatedDate) 
-    ? historyAnalisys[formatedDate]
+    ? historyAnalisys[formatedDate].verdict
     : "";
   return (
-    <CalendarDay className={className}>{dayjsDate.date()}</CalendarDay>
+    <CalendarDay className={className}>
+      <div className="day">
+        {dayjsDate.date()}
+      </div>
+    </CalendarDay>
   );
 }
 
-const CalendarDay = styled.div`
-  height: 35px;
-  width: 35px;
+const FlexContainer = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
+  gap: 10px;
+  flex-direction: column;
+  & > *:first-child{
+    margin-top: 20px;
+  }
+  & > *:last-child{
+    margin-bottom: 20px;
+  }
+`;
+
+const CalendarWrapper = styled.div`
+  margin-top: 20px;
+`;
+
+const CalendarDay = styled.div`
+  width: 100%;
+  padding-bottom: 100%;
+  position: relative;
+
+  .day {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
   &.perfect {
     background-color: var(--light-green);
