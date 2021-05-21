@@ -17,16 +17,21 @@ export default function DailyHabitCard(props) {
   function toggleCard() {
     setIsInteractive(false);
     const command = done ? "uncheck" : "check";
-    const url = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${habitId}/${command}`;
     const body = {};
     const config = {
       headers: {
         Authorization: `Bearer ${userState.token}`,
       },
     };
+    //posting habit toggle
     axios
-      .post(url, body, config)
+      .post(
+        `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${habitId}/${command}`,
+        body,
+        config
+      )
       .then(() => {
+        //getting and setting todays habits
         axios
           .get(
             "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today",
@@ -35,23 +40,22 @@ export default function DailyHabitCard(props) {
           .then(({ data }) => {
             setTodaysHabits(data);
             setIsInteractive(true);
-
-            //updating history
-            axios
-              .get(
-                "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily",
-                config
-              )
-              .then(({ data }) => {
-                setUserHistory(data);
-              })
-              .catch(() => {
-                alert("Erro ao buscar dados do historico");
-              });
           })
-
           .catch(() => {
             alert("Erro ao buscar habitos diarios");
+          });
+
+        //getting and setting history
+        axios
+          .get(
+            "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily",
+            config
+          )
+          .then(({ data }) => {
+            setUserHistory(data);
+          })
+          .catch(() => {
+            alert("Erro ao buscar dados do historico");
           });
       })
       .catch(() => {

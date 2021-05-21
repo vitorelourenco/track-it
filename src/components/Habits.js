@@ -3,7 +3,7 @@ import Menu from "./Menu";
 import styled from "styled-components";
 import { Add } from "react-ionicons";
 import { useEffect, useState } from "react";
-import NewHabit from "./NewHabbit";
+import NewHabit from "./NewHabit";
 import Habit from "./Habit";
 import UserContext from "../contexts/UserContext";
 import { useContext } from "react";

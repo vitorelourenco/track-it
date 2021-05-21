@@ -24,8 +24,7 @@ export default function NewHabit(props) {
       .map((elem, i) => (elem !== false ? i : false))
       .filter((elem) => elem !== false);
     const name = habitName;
-    const url =
-      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
+
     const body = { name, days };
     const config = {
       headers: {
@@ -34,10 +33,11 @@ export default function NewHabit(props) {
     };
 
     setIsInteractive(false);
+    //posting new habit
     axios
-      .post(url, body, config)
+      .post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", body, config)
       .then(() => {
-        //updating todays habits
+        //getting and setting todays habits
         axios
           .get(
             "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today",
@@ -50,7 +50,9 @@ export default function NewHabit(props) {
             alert("Erro ao buscar habitos diarios");
           });
 
-        //updating all habits
+        //getting and setting all habits
+        //this makes sure the NewHabit component will only go away
+        //AFTER the app is ready to render the new habit as a habit.
         axios
           .get(
             "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
@@ -67,7 +69,7 @@ export default function NewHabit(props) {
             alert("Erro na requisicao de habitos");
           });
 
-        //updating history
+        //getting and setting history
         axios
           .get(
             "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily",
@@ -99,8 +101,9 @@ export default function NewHabit(props) {
   const { setUserHistory } = useContext(HistoryContext);
   const { userState } = useContext(UserContext);
   const [isInteractive, setIsInteractive] = useState(true);
+
   const dayIsRequired = !checkBoxRowState.reduce(
-    (acc, bol) => (acc = acc || bol),
+    (acc, checkBoxUnitState) => (acc = acc || checkBoxUnitState),
     false
   );
 
@@ -108,7 +111,7 @@ export default function NewHabit(props) {
   const { setHabits } = useContext(HabitsContext);
 
   return (
-    <NewHabbitWrapper className={className}>
+    <NewHabitWrapper className={className}>
       <form onSubmit={submit}>
         <Input
           type="text"
@@ -152,11 +155,11 @@ export default function NewHabit(props) {
           />
         </ButtonBox>
       </form>
-    </NewHabbitWrapper>
+    </NewHabitWrapper>
   );
 }
 
-const NewHabbitWrapper = styled.article`
+const NewHabitWrapper = styled.article`
   background-color: white;
   border-radius: 5px;
   padding: 19px;

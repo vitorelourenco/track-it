@@ -33,7 +33,7 @@ export default function Habit(props) {
         config
       )
       .then(() => {
-        //updating todays habits
+        //getting and setting todays habits
         axios
           .get(
             "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today",
@@ -46,7 +46,7 @@ export default function Habit(props) {
             alert("Erro ao buscar habitos diarios");
           });
 
-        //updating all habits
+        //getting and setting all habits
         axios
           .get(
             "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
@@ -59,7 +59,7 @@ export default function Habit(props) {
             alert("Erro na requisicao de habitos");
           });
 
-        //updating history
+        //getting and setting history
         axios
           .get(
             "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily",

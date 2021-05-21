@@ -42,6 +42,7 @@ function App() {
     }
   },[]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  //loading data ahead of time for a better user experience
   //load all habits if valid user is logged in
   useEffect(() => {
     if (typeof userState !== "object" || !userState.hasOwnProperty("token"))
