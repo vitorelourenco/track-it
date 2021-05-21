@@ -36,9 +36,7 @@ function App() {
     const pathName = location.pathname;
     if (localUser !== null){
       setUserState(JSON.parse(localUser));
-      if (pathName!=="/hoje" && pathName!=="/historico" && pathName!=="/habitos"){
-        history.push("/hoje");
-      }
+      history.push("/hoje");
     }
   },[]); // eslint-disable-line react-hooks/exhaustive-deps
 
