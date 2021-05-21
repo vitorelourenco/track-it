@@ -1,9 +1,7 @@
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import styled from "styled-components";
-import UserContext from "../contexts/UserContext";
-import { useContext, useEffect } from "react";
-import axios from "axios";
+import { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import percentage from "../functions/percentage";
 import TodaysContext from "../contexts/TodaysContext";

@@ -5,19 +5,18 @@ import UserContext from "../contexts/UserContext";
 import { useContext, useState } from "react";
 import axios from "axios";
 import LoadingCover from "./LoadingCover";
-import TodaysContext from '../contexts/TodaysContext';
-import HabitsContext from '../contexts/HabitsContext';
-import HistoryContext from '../contexts/HistoryContext';
+import TodaysContext from "../contexts/TodaysContext";
+import HabitsContext from "../contexts/HabitsContext";
+import HistoryContext from "../contexts/HistoryContext";
 
 export default function Habit(props) {
   const { weekDays, checkBoxRowState, habitName, id } = props;
-  const { userState, setUserState } = useContext(UserContext);
+  const { userState } = useContext(UserContext);
   const [isInteractive, setIsInteractive] = useState(true);
 
-  const {userHistory, setUserHistory} = useContext(HistoryContext);
-  const {todaysHabits, setTodaysHabits} = useContext(TodaysContext);
-  const {habits, setHabits} = useContext(HabitsContext);
-
+  const { setUserHistory } = useContext(HistoryContext);
+  const { setTodaysHabits } = useContext(TodaysContext);
+  const { setHabits } = useContext(HabitsContext);
 
   function deleteTask() {
     if (!window.confirm(`Deseja deletar o hábito \n ${habitName}`)) return;
@@ -29,42 +28,54 @@ export default function Habit(props) {
     };
 
     axios
-    .delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`, config)
-    .then(() => {
-      //updating todays habits
-      axios
-      .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config)
-      .then(({ data }) => {
-        setTodaysHabits(data);
-      })
-      .catch(() => {
-        alert("Erro ao buscar habitos diarios");
-      });
+      .delete(
+        `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`,
+        config
+      )
+      .then(() => {
+        //updating todays habits
+        axios
+          .get(
+            "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today",
+            config
+          )
+          .then(({ data }) => {
+            setTodaysHabits(data);
+          })
+          .catch(() => {
+            alert("Erro ao buscar habitos diarios");
+          });
 
-      //updating all habits
-      axios
-      .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config)
-      .then(({ data }) => {
-        setHabits(data);
-      })
-      .catch(() => {
-        alert("Erro na requisicao de habitos");
-      });
+        //updating all habits
+        axios
+          .get(
+            "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
+            config
+          )
+          .then(({ data }) => {
+            setHabits(data);
+          })
+          .catch(() => {
+            alert("Erro na requisicao de habitos");
+          });
 
-      //updating history
-      axios
-      .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily", config)
-      .then(({ data }) => {
-        setUserHistory(data);
+        //updating history
+        axios
+          .get(
+            "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily",
+            config
+          )
+          .then(({ data }) => {
+            setUserHistory(data);
+          })
+          .catch(() => {
+            alert("Erro ao buscar dados do historico");
+          });
       })
       .catch(() => {
-        alert("Erro ao buscar dados do historico");
+        setIsInteractive(true);
+        alert("Erro ao tentar deletar habito");
       });
-    })
-    .catch(() => {
-      setIsInteractive(true);
-      alert("Erro ao tentar deletar habito");
-    });
   }
 
   return (

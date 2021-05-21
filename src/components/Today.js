@@ -4,7 +4,7 @@ import styled from "styled-components";
 import TodaysHabitsCard from "./TodaysHabitsCard";
 import UserContext from "../contexts/UserContext";
 import TodaysContext from "../contexts/TodaysContext";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import axios from "axios";
 import percentage from "../functions/percentage";
 var dayjs = require("dayjs");
@@ -58,7 +58,7 @@ export default function Today() {
       .catch(() => {
         alert("Erro ao buscar habitos diarios");
       });
-  }, []);
+  }, [userState, setTodaysHabits]);
 
   if (localStorage.getItem("user") === null) {
     window.location.href = "/";

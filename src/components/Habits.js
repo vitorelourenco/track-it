@@ -8,8 +8,7 @@ import Habit from "./Habit";
 import UserContext from "../contexts/UserContext";
 import { useContext } from "react";
 import axios from "axios";
-import HabitsContext from '../contexts/HabitsContext';
-import TodaysContext from '../contexts/TodaysContext';
+import HabitsContext from "../contexts/HabitsContext";
 
 export default function Habits() {
   const [checkBoxRowState, setCheckBoxRowState] = useState(
@@ -18,8 +17,7 @@ export default function Habits() {
   const [habitName, setHabitName] = useState("");
   const [makingNewHabit, setMakingNewHabit] = useState(false);
   const { userState } = useContext(UserContext);
-  const {habits, setHabits} = useContext(HabitsContext);
-  const {setTodaysHabits} = useContext(TodaysContext);
+  const { habits, setHabits } = useContext(HabitsContext);
 
   //load all habits if valid user is logged in
   useEffect(() => {
@@ -41,13 +39,12 @@ export default function Habits() {
       .catch(() => {
         alert("Erro na requisicao de habitos");
       });
-  }, []);
+  }, [userState, setHabits]);
 
   if (localStorage.getItem("user") === null) {
     window.location.href = "/";
     return "";
   }
-
 
   return (
     <>

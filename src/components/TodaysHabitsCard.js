@@ -1,18 +1,18 @@
 import styled from "styled-components";
 import { CheckmarkOutline } from "react-ionicons";
 import UserContext from "../contexts/UserContext";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import LoadingCover from "./LoadingCover";
-import TodaysContext from '../contexts/TodaysContext';
-import HistoryContext from '../contexts/HistoryContext';
+import TodaysContext from "../contexts/TodaysContext";
+import HistoryContext from "../contexts/HistoryContext";
 
 export default function DailyHabitCard(props) {
   const { habitId, name, currentSequence, highestSequence, done } = props;
-  const { userState, setUserState } = useContext(UserContext);
+  const { userState } = useContext(UserContext);
   const [isInteractive, setIsInteractive] = useState(true);
-  const {todaysHabits, setTodaysHabits} = useContext(TodaysContext);
-  const {userHistory, setUserHistory} = useContext(HistoryContext);
+  const { setTodaysHabits } = useContext(TodaysContext);
+  const { setUserHistory } = useContext(HistoryContext);
 
   function toggleCard() {
     setIsInteractive(false);
@@ -25,37 +25,44 @@ export default function DailyHabitCard(props) {
       },
     };
     axios
-    .post(url, body, config)
-    .then(() => {
-      axios
-      .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config)
-      .then(({ data }) => {
-        setTodaysHabits(data);
-        setIsInteractive(true);
-
-        //updating history
+      .post(url, body, config)
+      .then(() => {
         axios
-        .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily", config)
-        .then(({ data }) => {
-          setUserHistory(data);
-        })
-        .catch(() => {
-          alert("Erro ao buscar dados do historico");
-        });
-        })
+          .get(
+            "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today",
+            config
+          )
+          .then(({ data }) => {
+            setTodaysHabits(data);
+            setIsInteractive(true);
 
+            //updating history
+            axios
+              .get(
+                "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily",
+                config
+              )
+              .then(({ data }) => {
+                setUserHistory(data);
+              })
+              .catch(() => {
+                alert("Erro ao buscar dados do historico");
+              });
+          })
+
+          .catch(() => {
+            alert("Erro ao buscar habitos diarios");
+          });
+      })
       .catch(() => {
-        alert("Erro ao buscar habitos diarios");
+        alert("Erro ao tentar marcar/desmarcar habito");
+        setIsInteractive(true);
       });
-    })
-    .catch(() => {
-      alert("Erro ao tentar marcar/desmarcar habito");
-      setIsInteractive(true);
-    });
   }
 
   return (
-    <CardWrapper onClick={isInteractive ? toggleCard : () => undefined}
+    <CardWrapper
+      onClick={isInteractive ? toggleCard : () => undefined}
       currentSequence={currentSequence}
       highestSequence={highestSequence}
       done={done}

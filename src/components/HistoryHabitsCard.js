@@ -24,7 +24,7 @@ const CardWrapper = styled.div`
   padding: 13px;
   cursor: pointer;
 
-  section{
+  section {
     display: flex;
     align-items: center;
   }

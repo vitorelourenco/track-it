@@ -5,27 +5,26 @@ import UserContext from "../contexts/UserContext";
 import { useContext, useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import axios from 'axios';
-import HistoryHabitCard from './HistoryHabitsCard';
-import HistoryContext from '../contexts/HistoryContext';
-import HabitsContext from '../contexts/HabitsContext';
-import TodaysContext from '../contexts/TodaysContext';
+import axios from "axios";
+import HistoryHabitCard from "./HistoryHabitsCard";
+import HistoryContext from "../contexts/HistoryContext";
 var dayjs = require("dayjs");
 
 export default function History() {
   const { userState } = useContext(UserContext);
 
-  const { dailyHabits } = useContext(TodaysContext);
-  const { habits } = useContext(HabitsContext);
   const { userHistory, setUserHistory } = useContext(HistoryContext);
-  const [onShow, setOnShow] = useState(undefined)
+  const [onShow, setOnShow] = useState(undefined);
 
-  const historyAnalisys = userHistory.reduce((acc,{day, habits})=>{
-    const doneCount = habits.reduce((acc,elem)=>elem.done?acc+1:acc,0);
-    const verdict = doneCount === habits.length? "perfect" : "lacking"; 
-    acc[day]={verdict, habits};
-    return (acc);
-  },{});
+  const historyAnalisys = userHistory.reduce((acc, { day, habits }) => {
+    const doneCount = habits.reduce(
+      (acc, elem) => (elem.done ? acc + 1 : acc),
+      0
+    );
+    const verdict = doneCount === habits.length ? "perfect" : "lacking";
+    acc[day] = { verdict, habits };
+    return acc;
+  }, {});
 
   //load user history if valid user is logged in
   useEffect(() => {
@@ -47,20 +46,20 @@ export default function History() {
       .catch(() => {
         alert("Erro ao buscar dados do historico");
       });
-  }, []);
+  }, [userState, setUserHistory]);
 
   if (localStorage.getItem("user") === null) {
     window.location.href = "/";
     return "";
   }
 
-  function onClickDay(date){
+  function onClickDay(date) {
     const dayjsDate = dayjs(date);
     const formatedDate = dayjsDate.format("DD/MM/YYYY");
-    if (!historyAnalisys.hasOwnProperty(formatedDate)){
+    if (!historyAnalisys.hasOwnProperty(formatedDate)) {
       setOnShow(undefined);
       return;
-    } 
+    }
     onShow === formatedDate ? setOnShow(undefined) : setOnShow(formatedDate);
   }
 
@@ -70,15 +69,17 @@ export default function History() {
       <MainWrapper>
         <h2>Histórico</h2>
         <CalendarWrapper>
-          <Calendar onClickDay={onClickDay}
+          <Calendar
+            onClickDay={onClickDay}
             locale="pt-BR"
             formatDay={(locale, date) => formatDate(date, historyAnalisys)}
           />
           <FlexContainer>
-            {onShow ? historyAnalisys[onShow].habits.map(({id, name, done})=>{
-              return <HistoryHabitCard key={id} name={name} done={done}/>
-              })
-            : ""}
+            {onShow
+              ? historyAnalisys[onShow].habits.map(({ id, name, done }) => {
+                  return <HistoryHabitCard key={id} name={name} done={done} />;
+                })
+              : ""}
           </FlexContainer>
         </CalendarWrapper>
       </MainWrapper>
@@ -90,15 +91,12 @@ export default function History() {
 function formatDate(date, historyAnalisys) {
   const dayjsDate = dayjs(date);
   const formatedDate = dayjsDate.format("DD/MM/YYYY");
-  const className = 
-    historyAnalisys.hasOwnProperty(formatedDate) 
+  const className = historyAnalisys.hasOwnProperty(formatedDate)
     ? historyAnalisys[formatedDate].verdict
     : "";
   return (
     <CalendarDay className={className}>
-      <div className="day">
-        {dayjsDate.date()}
-      </div>
+      <div className="day">{dayjsDate.date()}</div>
     </CalendarDay>
   );
 }
@@ -107,10 +105,10 @@ const FlexContainer = styled.div`
   display: flex;
   gap: 10px;
   flex-direction: column;
-  & > *:first-child{
+  & > *:first-child {
     margin-top: 20px;
   }
-  & > *:last-child{
+  & > *:last-child {
     margin-bottom: 20px;
   }
 `;

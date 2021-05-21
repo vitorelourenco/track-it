@@ -3,14 +3,14 @@ import CancelButton from "./CancelButton";
 import CheckBox from "./CheckBox";
 import Input from "./Input";
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import UserContext from "../contexts/UserContext";
 import { useContext } from "react";
 import ThreeDots from "./ThreeDots";
 import TodaysContext from "../contexts/TodaysContext";
-import HabitsContext from '../contexts/HabitsContext';
-import HistoryContext from '../contexts/HistoryContext';
+import HabitsContext from "../contexts/HabitsContext";
+import HistoryContext from "../contexts/HistoryContext";
 
 export default function NewHabit(props) {
   function cancel(e) {
@@ -35,47 +35,55 @@ export default function NewHabit(props) {
 
     setIsInteractive(false);
     axios
-    .post(url, body, config)
-    .then(() => {
-      //updating todays habits
-      axios
-      .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config)
-      .then(({ data }) => {
-        setTodaysHabits(data);
+      .post(url, body, config)
+      .then(() => {
+        //updating todays habits
+        axios
+          .get(
+            "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today",
+            config
+          )
+          .then(({ data }) => {
+            setTodaysHabits(data);
+          })
+          .catch(() => {
+            alert("Erro ao buscar habitos diarios");
+          });
+
+        //updating all habits
+        axios
+          .get(
+            "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
+            config
+          )
+          .then(({ data }) => {
+            setHabits(data);
+            setIsInteractive(true);
+            setHabitName("");
+            setCheckBoxRowState([...checkBoxRowState].fill(false));
+            setMakingNewHabit(false);
+          })
+          .catch(() => {
+            alert("Erro na requisicao de habitos");
+          });
+
+        //updating history
+        axios
+          .get(
+            "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily",
+            config
+          )
+          .then(({ data }) => {
+            setUserHistory(data);
+          })
+          .catch(() => {
+            alert("Erro ao buscar dados do historico");
+          });
       })
       .catch(() => {
-        alert("Erro ao buscar habitos diarios");
-      });
-
-      //updating all habits
-      axios
-      .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config)
-      .then(({ data }) => {
-        setHabits(data);
+        alert("Erro ao adicionar um novo habito");
         setIsInteractive(true);
-        setHabitName("");
-        setCheckBoxRowState([...checkBoxRowState].fill(false));
-        setMakingNewHabit(false);
-      })
-      .catch(() => {
-        alert("Erro na requisicao de habitos");
       });
-
-      //updating history
-      axios
-      .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily", config)
-      .then(({ data }) => {
-        setUserHistory(data);
-      })
-      .catch(() => {
-        alert("Erro ao buscar dados do historico");
-      });
-
-    })
-    .catch(() => {
-      alert("Erro ao adicionar um novo habito");
-      setIsInteractive(true);
-    });
   }
 
   const {
@@ -83,22 +91,21 @@ export default function NewHabit(props) {
     checkBoxRowState,
     setCheckBoxRowState,
     setMakingNewHabit,
-    makingNewHabit,
     habitName,
     setHabitName,
     className,
   } = props;
-  
-  const {userHistory, setUserHistory} = useContext(HistoryContext);
-  const { userState, setUserState } = useContext(UserContext);
+
+  const { setUserHistory } = useContext(HistoryContext);
+  const { userState } = useContext(UserContext);
   const [isInteractive, setIsInteractive] = useState(true);
   const dayIsRequired = !checkBoxRowState.reduce(
     (acc, bol) => (acc = acc || bol),
     false
   );
 
-  const {todaysHabits, setTodaysHabits} = useContext(TodaysContext);
-  const {habits, setHabits} = useContext(HabitsContext);
+  const { setTodaysHabits } = useContext(TodaysContext);
+  const { setHabits } = useContext(HabitsContext);
 
   return (
     <NewHabbitWrapper className={className}>

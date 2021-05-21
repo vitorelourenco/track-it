@@ -40,7 +40,7 @@ function App() {
         history.push("/hoje");
       }
     }
-  },[]);
+  },[]); // eslint-disable-line react-hooks/exhaustive-deps
 
   //load all habits if valid user is logged in
   useEffect(() => {
