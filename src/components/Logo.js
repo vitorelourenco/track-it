@@ -83,6 +83,7 @@ const LogoWrapper = styled.div`
   width: 160px;
   position: relative;
   display: inline-block;
+  flex-shrink: 0;
 
   & > svg {
     position: absolute;
